@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { BoardIdContext } from "./context";
 import { useParams } from "react-router";
 import { mulberry32 } from "../random";
@@ -18,10 +18,8 @@ export const BoardIdProvider = ({
   const { id: urlId } = useParams();
   const defaultId = useDateId();
   const id = providedId ?? urlId ?? defaultId;
-  const random = useMemo(() => mulberry32(id), [id]);
-
   return (
-    <BoardIdContext.Provider value={{ random, id }}>
+    <BoardIdContext.Provider value={{ random: mulberry32(id), id }}>
       {children}
     </BoardIdContext.Provider>
   );

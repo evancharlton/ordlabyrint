@@ -3,10 +3,24 @@ import { GridContext } from "./context";
 import { useGridSize } from "../GridSizeProvider";
 import { useBoardId } from "../BoardIdProvider";
 import { LETTERS } from "../alphabet";
+import { mulberry32 } from "../random";
+
+const useRandomLetters = (): string[] => {
+  const { width, height } = useGridSize();
+  const { id } = useBoardId();
+
+  return useMemo(() => {
+    const random = mulberry32(id);
+    const out = new Array(width * height);
+    for (let i = 0; i < out.length; i += 1) {
+      out[i] = LETTERS[Math.floor(random() * LETTERS.length)];
+    }
+    return out;
+  }, [height, width, id]);
+};
 
 export const GridProvider = ({ children }: { children: ReactNode }) => {
   const { width, height } = useGridSize();
-  const { random } = useBoardId();
   const perimeter = useMemo(() => {
     const perimeter: Record<number, true> = {};
     const offset = height * (height - 1);
@@ -25,13 +39,7 @@ export const GridProvider = ({ children }: { children: ReactNode }) => {
 
   const [ids, setIds] = useState<number[]>([]);
 
-  const letters = useMemo(() => {
-    const out = new Array(width * height);
-    for (let i = 0; i < out.length; i += 1) {
-      out[i] = LETTERS[Math.floor(random() * LETTERS.length)];
-    }
-    return out;
-  }, [width, height, random]);
+  const letters = useRandomLetters();
 
   const allowedIds = useMemo<Record<number, true>>(() => {
     if (ids.length === 0) {
