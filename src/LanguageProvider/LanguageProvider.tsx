@@ -1,20 +1,42 @@
 import { useEffect, useState } from "react";
-import { Outlet } from "react-router";
+import { Outlet, useParams } from "react-router";
 import { LanguageContext } from "./context";
 
 export const LanguageProvider = () => {
+  const { lang } = useParams();
   const [words, setWords] = useState<string[]>([]);
-  const [state, setState] = useState<"pending" | "loading" | "loaded" | Error>(
-    "pending"
-  );
+  const [state, setState] = useState<
+    "pending" | "loading" | "loaded" | "error"
+  >("pending");
 
   useEffect(() => {
-    // TODO: fetch
-    setTimeout(() => {
-      setState("loaded");
-      setWords(["foo", "bar", "baz"]);
-    }, 500);
-  }, []);
+    const abortController = new AbortController();
+    setState("loading");
+    fetch(
+      `${import.meta.env.BASE_URL}/${lang}/words.json`.replace(/^\/\//, "/"),
+      { signal: abortController.signal }
+    )
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Response is not ok");
+        }
+        return res.json();
+      })
+      .then((words) => {
+        setWords(words);
+        setState("loaded");
+      })
+      .catch((ex) => {
+        if (ex instanceof DOMException && ex.name === "AbortError") {
+          return;
+        }
+        console.warn(ex);
+        setState("error");
+      });
+    return () => {
+      abortController.abort();
+    };
+  }, [lang]);
 
   if (state === "loading") {
     return <h1>...</h1>;
@@ -26,7 +48,9 @@ export const LanguageProvider = () => {
         <Outlet />
       </LanguageContext.Provider>
     );
-  } else {
+  } else if (state === "error") {
     return <h1>Error</h1>;
+  } else {
+    return <h1>???</h1>;
   }
 };
