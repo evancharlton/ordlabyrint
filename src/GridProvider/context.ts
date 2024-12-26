@@ -1,11 +1,13 @@
 import { createContext, useContext } from "react";
 
+export type CellId = `${number},${number}`;
+
 export const GridContext = createContext<
   | {
-      letters: string[];
-      path: string[];
-      allowedIds: Record<number, true>;
-      addStep: (id: number) => void;
+      letters: Record<CellId, string>;
+      path: CellId[];
+      allowedIds: Record<CellId, true>;
+      addStep: (id: CellId) => void;
     }
   | undefined
 >(undefined);

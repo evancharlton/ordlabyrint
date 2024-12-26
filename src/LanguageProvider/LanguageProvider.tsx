@@ -5,9 +5,12 @@ import { LanguageContext } from "./context";
 export const LanguageProvider = () => {
   const { lang } = useParams();
   const [words, setWords] = useState<string[]>([]);
+  const [lookup, setLookup] = useState<Set<string>>(new Set());
   const [state, setState] = useState<
     "pending" | "loading" | "loaded" | "error"
   >("pending");
+
+  console.log(`LanguageProvider rerendered`);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -22,8 +25,10 @@ export const LanguageProvider = () => {
         }
         return res.json();
       })
-      .then((words) => {
+      .then((words: string[]) => {
         setWords(words);
+
+        setLookup(new Set<string>(words));
         setState("loaded");
       })
       .catch((ex) => {
@@ -44,7 +49,7 @@ export const LanguageProvider = () => {
     return <h3>...</h3>;
   } else if (state === "loaded") {
     return (
-      <LanguageContext.Provider value={{ words }}>
+      <LanguageContext.Provider value={{ words, lookup }}>
         <Outlet />
       </LanguageContext.Provider>
     );

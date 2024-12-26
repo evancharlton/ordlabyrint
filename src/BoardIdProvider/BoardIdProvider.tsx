@@ -8,16 +8,16 @@ const useDateId = () => {
   return [now.getFullYear(), now.getMonth(), now.getDate()].join("-");
 };
 
-export const BoardIdProvider = ({
-  children,
-  id: providedId,
-}: {
+type Props = {
   children: React.ReactNode;
   id?: string | number;
-}) => {
+};
+
+export const BoardIdProvider = ({ children, id: providedId }: Props) => {
   const { id: urlId } = useParams();
   const defaultId = useDateId();
   const id = providedId ?? urlId ?? defaultId;
+  console.log(`BoardIdProvider re-render`);
   return (
     <BoardIdContext.Provider value={{ random: mulberry32(id), id }}>
       {children}

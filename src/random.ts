@@ -23,3 +23,13 @@ export const mulberry32 = (seed: Seed): PRNG => {
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
 };
+
+export const randomItem = <T>(
+  items: {
+    [index: number]: T;
+    length: number;
+  },
+  random: PRNG
+): T => {
+  return items[Math.floor(random() * items.length)];
+};
