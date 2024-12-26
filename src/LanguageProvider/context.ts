@@ -1,7 +1,13 @@
 import { createContext, useContext } from "react";
+import { Trie } from "../trie";
 
 export const LanguageContext = createContext<
-  { words: string[]; lookup: Set<string> } | undefined
+  | {
+      words: string[];
+      letters: string;
+      trie: Trie;
+    }
+  | undefined
 >(undefined);
 
 export const useWords = () => {

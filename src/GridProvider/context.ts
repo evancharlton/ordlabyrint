@@ -1,10 +1,11 @@
 import { createContext, useContext } from "react";
+import { Letter } from "../trie";
 
 export type CellId = `${number},${number}`;
 
 export const GridContext = createContext<
   | {
-      letters: Record<CellId, string>;
+      letters: Record<CellId, Letter>;
       path: CellId[];
       allowedIds: Record<CellId, true>;
       addStep: (id: CellId) => void;

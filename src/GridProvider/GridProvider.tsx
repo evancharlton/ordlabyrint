@@ -2,13 +2,14 @@ import { ReactNode, useCallback, useMemo } from "react";
 import { CellId, GridContext } from "./context";
 import { useGridSize } from "../GridSizeProvider";
 import { useBoardId } from "../BoardIdProvider";
-import { LETTERS } from "../alphabet";
 import { mulberry32, randomItem } from "../random";
 import SolutionProvider from "../SolutionProvider";
+import { useWords } from "../LanguageProvider";
 
 const useGridLetters = (): Record<CellId, string> => {
   const { width, height } = useGridSize();
   const { id } = useBoardId();
+  const { letters: LETTERS } = useWords();
 
   return useMemo(() => {
     const random = mulberry32(id);
@@ -22,7 +23,7 @@ const useGridLetters = (): Record<CellId, string> => {
     }
 
     return grid;
-  }, [id, height, width]);
+  }, [id, height, width, LETTERS]);
 };
 
 export const GridProvider = ({ children }: { children: ReactNode }) => {

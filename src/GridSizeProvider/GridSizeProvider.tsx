@@ -28,7 +28,7 @@ export const GridSizeProvider = () => {
   }
 
   return (
-    <GridSizeContext.Provider value={value}>
+    <GridSizeContext.Provider value={value} key={size}>
       <Outlet />
     </GridSizeContext.Provider>
   );

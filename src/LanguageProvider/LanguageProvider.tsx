@@ -1,20 +1,28 @@
-import { useEffect, useState } from "react";
+import { useEffect, useReducer } from "react";
 import { Outlet, useParams } from "react-router";
 import { LanguageContext } from "./context";
+import { reducer, State } from "./state";
 
 export const LanguageProvider = () => {
   const { lang } = useParams();
-  const [words, setWords] = useState<string[]>([]);
-  const [lookup, setLookup] = useState<Set<string>>(new Set());
-  const [state, setState] = useState<
-    "pending" | "loading" | "loaded" | "error"
-  >("pending");
+  const [{ letters, words, error, trie }, dispatch] = useReducer(reducer, {
+    error: undefined,
+    words: [],
+    letters: "",
+    trie: {},
+  } satisfies State);
+
+  const state = error
+    ? "error"
+    : !letters || !words.length
+      ? "loading"
+      : "loaded";
 
   console.log(`LanguageProvider rerendered`);
 
   useEffect(() => {
     const abortController = new AbortController();
-    setState("loading");
+    dispatch({ action: "start-loading" });
     fetch(
       `${import.meta.env.BASE_URL}/${lang}/words.json`.replace(/^\/\//, "/"),
       { signal: abortController.signal }
@@ -26,18 +34,36 @@ export const LanguageProvider = () => {
         return res.json();
       })
       .then((words: string[]) => {
-        setWords(words);
-
-        setLookup(new Set<string>(words));
-        setState("loaded");
+        dispatch({ action: "add-words", words });
       })
       .catch((ex) => {
         if (ex instanceof DOMException && ex.name === "AbortError") {
           return;
         }
         console.warn(ex);
-        setState("error");
+        dispatch({ action: "add-error", error: ex });
       });
+
+    fetch(`${import.meta.env.BASE_URL}/${lang}/letters`.replace(/^\/\//, "/"), {
+      signal: abortController.signal,
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Response is not ok");
+        }
+        return res.text();
+      })
+      .then((letters: string) => {
+        dispatch({ action: "add-letters", letters });
+      })
+      .catch((ex) => {
+        if (ex instanceof DOMException && ex.name === "AbortError") {
+          return;
+        }
+        console.warn(ex);
+        dispatch({ action: "add-error", error: ex });
+      });
+
     return () => {
       abortController.abort();
     };
@@ -45,11 +71,9 @@ export const LanguageProvider = () => {
 
   if (state === "loading") {
     return <h1>...</h1>;
-  } else if (state === "pending") {
-    return <h3>...</h3>;
   } else if (state === "loaded") {
     return (
-      <LanguageContext.Provider value={{ words, lookup }}>
+      <LanguageContext.Provider value={{ words, letters, trie }}>
         <Outlet />
       </LanguageContext.Provider>
     );

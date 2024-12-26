@@ -1,8 +1,9 @@
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useMemo, useState } from "react";
 import { useGrid } from "../GridProvider";
 import { useGridSize } from "../GridSizeProvider";
 import { CellId } from "../GridProvider";
 import { useSolve } from "./useSolve";
+import { neverGuard } from "../neverGuard";
 
 export const Grid = () => {
   const { letters, path } = useGrid();
@@ -23,18 +24,37 @@ export const Grid = () => {
     return out;
   }, [height, letters, width]);
 
-  const solve = useSolve();
+  const { solve, state, solution } = useSolve();
+  const [controller, setController] = useState<AbortController | undefined>();
 
   return (
     <div>
       <button
         onClick={() => {
-          const results = solve();
-          console.log(results);
+          switch (state) {
+            case "solving": {
+              controller?.abort("cancelled");
+              return;
+            }
+            case "solved": {
+              return;
+            }
+            case "pending":
+            case "aborted": {
+              const c = new AbortController();
+              setController(c);
+              solve(c.signal);
+              return;
+            }
+            default: {
+              return neverGuard(state, undefined);
+            }
+          }
         }}
       >
         Solve
       </button>
+      {state === "solved" ? <div>{solution?.words.join(" - ")}</div> : null}
       <div>{path.join(" - ")}</div>
       <div
         style={{
