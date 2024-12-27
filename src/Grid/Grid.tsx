@@ -2,12 +2,16 @@ import { ReactNode, useMemo, useState } from "react";
 import { useGrid } from "../GridProvider";
 import { useGridSize } from "../GridSizeProvider";
 import { CellId } from "../GridProvider";
-import { useSolve } from "./useSolve";
+import { useSolve2 as useSolve } from "./useSolve";
 import { neverGuard } from "../neverGuard";
+import classes from "./Grid.module.css";
 
 export const Grid = () => {
   const { letters, path } = useGrid();
   const { width, height } = useGridSize();
+
+  const { solve, state, solution } = useSolve();
+  const [controller, setController] = useState<AbortController | undefined>();
 
   const grid = useMemo(() => {
     const out: ReactNode[] = [];
@@ -15,17 +19,18 @@ export const Grid = () => {
       for (let x = 0; x < width; x += 1) {
         const key: CellId = `${x},${y}`;
         out.push(
-          <button key={key} disabled={false}>
+          <button
+            key={key}
+            disabled={false}
+            className={solution?.path?.includes(key) ? classes.used : undefined}
+          >
             {letters[key]}
           </button>
         );
       }
     }
     return out;
-  }, [height, letters, width]);
-
-  const { solve, state, solution } = useSolve();
-  const [controller, setController] = useState<AbortController | undefined>();
+  }, [height, letters, solution?.path, width]);
 
   return (
     <div>
@@ -36,9 +41,7 @@ export const Grid = () => {
               controller?.abort("cancelled");
               return;
             }
-            case "solved": {
-              return;
-            }
+            case "solved":
             case "pending":
             case "aborted": {
               const c = new AbortController();
@@ -52,7 +55,7 @@ export const Grid = () => {
           }
         }}
       >
-        Solve
+        {state}
       </button>
       {state === "solved" ? <div>{solution?.words.join(" - ")}</div> : null}
       <div>{path.join(" - ")}</div>

@@ -3,210 +3,270 @@ import { useWords } from "../LanguageProvider";
 import { useGridSize } from "../GridSizeProvider";
 import { CellId, useGrid } from "../GridProvider";
 import { Trie } from "../trie";
-
-type Step = {
-  path: CellId[];
-  words: string[];
-  current: string;
-  goal: (_: { x: number; y: number }) => boolean;
-  completed: boolean;
-  node: Trie;
-};
+import { astar, type Keyable } from "../astar";
 
 type Solution = {
   words: string[];
   path: CellId[];
 };
 
-const compare = (a: Step, b: Step): number => {
-  if (a.words.length !== b.words.length) {
-    return a.words.length - b.words.length;
-  }
+type Step = Keyable & {
+  x: number;
+  y: number;
 
-  return a.path.length - b.path.length;
+  minX: number;
+  minY: number;
+  maxX: number;
+  maxY: number;
+
+  goalX: number;
+  goalY: number;
+
+  path: CellId[];
+  words: string[];
+  current: string;
+  node: Trie;
 };
 
-export const useSolve = () => {
+export const useSolve2 = () => {
   const { trie: root } = useWords();
   const { width, height } = useGridSize();
   const { letters } = useGrid();
   const [state, setState] = useState<
     "pending" | "solving" | "aborted" | "solved"
   >("pending");
-  const [progress, _setProgress] = useState<number>(0);
+  const [progress, setProgress] = useState<number>(0);
   const [solution, setSolution] = useState<Solution | undefined>();
 
   const solve = useCallback(
     async (signal: AbortSignal) => {
-      const queue: Step[] = [];
+      setState("solving");
 
-      for (let y = 1; y < height - 1; y += 1) {
-        queue.push(
-          {
-            path: [`0,${y}`],
-            words: [],
-            current: letters[`0,${y}`],
-            goal: ({ x, y }) => x === width - 1 && y !== 0 && y !== height - 1,
-            node: root[letters[`0,${y}`]]!,
-            completed: false,
-          },
-          {
-            path: [`${width - 1},${y}`],
-            words: [],
-            current: letters[`${width - 1},${y}`],
-            goal: ({ x, y }) => x === 0 && y !== 0 && y !== height - 1,
-            node: root[letters[`${width - 1},${y}`]]!,
-            completed: false,
-          }
-        );
-      }
-
-      for (let x = 1; x < width - 1; x += 1) {
-        queue.push(
-          {
-            path: [`${x},0`],
-            words: [],
-            current: letters[`${x},0`],
-            goal: ({ x, y }) => y === height - 1 && x !== 0 && x !== height - 1,
-            node: root[letters[`${x},0`]]!,
-            completed: false,
-          },
-          {
-            path: [`${x},${height - 1}`],
-            words: [],
-            current: letters[`${x},${height - 1}`],
-            goal: ({ x, y }) => y === 0 && x !== 0 && x !== height - 1,
-            node: root[letters[`${x},${height - 1}`]]!,
-            completed: false,
-          }
-        );
-      }
-
-      queue.push(
-        {
-          path: [`0,0`],
-          words: [],
-          current: letters[`0,0`],
-          goal: ({ x, y }) => x === width - 1 && y === height - 1,
-          node: root[letters[`0,0`]]!,
-          completed: false,
+      const [final, _path] = await astar<Step>({
+        signal,
+        onProgress: (v) => {
+          setProgress(v);
         },
-        {
-          path: [`${width - 1},0`],
-          words: [],
-          current: letters[`${width - 1},0`],
-          goal: ({ x, y }) => x === 0 && y === height - 1,
-          node: root[letters[`${width - 1},0`]]!,
-          completed: false,
+        neighbors: (cell) => {
+          const { x, y, key, node } = cell;
+          switch (key) {
+            case "root": {
+              const corner = (x: number, y: number): Step => {
+                const key: CellId = `${x},${y}`;
+                return {
+                  key,
+                  x: x,
+                  y: y,
+                  minX: x,
+                  minY: y,
+                  maxX: x,
+                  maxY: y,
+                  // TODO: I'm sure there's some math I can do to derive this
+                  //       but my brain isn't that clever at the moment.
+                  goalX: x === 0 ? width - 1 : 0,
+                  goalY: y === 0 ? height - 1 : 0,
+                  path: [key],
+                  node: root[letters[key]]!,
+                  words: [],
+                  current: letters[key],
+                };
+              };
+
+              const starts: Step[] = [
+                // Top-left corner
+                corner(0, 0),
+
+                // Top-right corner
+                corner(width - 1, 0),
+
+                // Bottom-right corner
+                corner(width - 1, height - 1),
+
+                // Bottom-left corner
+                corner(0, height - 1),
+              ];
+
+              for (let y = 1; y < height - 1; y += 1) {
+                for (const x of [0, width - 1]) {
+                  const key: CellId = `${x},${y}`;
+                  starts.push({
+                    key,
+                    x,
+                    y,
+                    minX: x,
+                    maxX: x,
+                    minY: y,
+                    maxY: y,
+
+                    goalX: x === 0 ? width - 1 : 0,
+                    goalY: -1,
+                    path: [key],
+                    words: [],
+                    current: letters[key]!,
+                    node: root[letters[key]]!,
+                  });
+                }
+              }
+
+              for (let x = 1; x < width - 1; x += 1) {
+                for (const y of [0, height - 1]) {
+                  const key: CellId = `${x},${y}`;
+                  starts.push({
+                    key,
+                    x,
+                    y,
+                    minX: x,
+                    maxX: x,
+                    minY: y,
+                    maxY: y,
+
+                    goalX: -1,
+                    goalY: y === 0 ? height - 1 : 0,
+                    path: [key],
+                    words: [],
+                    current: letters[key]!,
+                    node: root[letters[key]]!,
+                  });
+                }
+              }
+
+              return starts;
+            }
+
+            default: {
+              return [
+                [x, y - 1], // top
+                [x + 1, y], // right
+                [x, y + 1], // bottom
+                [x - 1, y], // left
+
+                // TODO: Allow for diagonals?
+              ]
+                .map(([x, y]) => {
+                  const key: CellId = `${x},${y}`;
+                  return { x, y, key, letter: letters[key] } as const;
+                })
+                .filter(({ letter }) => !!letter)
+                .filter(({ key }) => !cell.path.includes(key))
+                .map(({ x, y, key, letter }): Step[] => {
+                  return (
+                    [
+                      // The possibility of starting a new word
+                      node._ && {
+                        x,
+                        y,
+                        key: `${cell.key} > ${key}`,
+
+                        node: root[letter]!,
+                        words: [...cell.words, cell.current],
+                        current: letter,
+
+                        maxX: Math.max(cell.maxX, x),
+                        maxY: Math.max(cell.maxY, y),
+                        minX: Math.min(cell.minX, x),
+                        minY: Math.min(cell.minY, y),
+
+                        goalX: cell.goalX,
+                        goalY: cell.goalY,
+                        path: [...cell.path, key],
+                      },
+                      // Continuing the current word -- if possible
+                      cell.node[letter] && {
+                        x,
+                        y,
+                        key: `${cell.key} + ${key}`,
+
+                        node: cell.node[letter],
+                        words: [...cell.words],
+                        current: cell.current + letter,
+
+                        maxX: Math.max(cell.maxX, x),
+                        maxY: Math.max(cell.maxY, y),
+                        minX: Math.min(cell.minX, x),
+                        minY: Math.min(cell.minY, y),
+
+                        goalX: cell.goalX,
+                        goalY: cell.goalY,
+                        path: [...cell.path, key],
+                      },
+                    ] satisfies (Step | undefined)[]
+                  ).filter((v): v is Step => !!v);
+                })
+                .flat();
+            }
+          }
         },
-        {
-          path: [`0,${height - 1}`],
-          words: [],
-          current: letters[`0,${height - 1}`],
-          goal: ({ x, y }) => x === width - 1 && y === 0,
-          node: root[letters[`0,${height - 1}`]]!,
-          completed: false,
+        weight: (neighbor, current) => {
+          if (neighbor.current.length < current.current.length) {
+            // A new word was started. This is much more costly than using
+            // one word.
+            return 10;
+          }
+          return 1;
         },
-        {
-          path: [`${width - 1},${height - 1}`],
+        start: {
+          key: "root",
+          x: -1,
+          y: -1,
+          minX: -1,
+          minY: -1,
+          maxX: -1,
+          maxY: -1,
+          goalX: -1,
+          goalY: -1,
+          path: [],
           words: [],
-          current: letters[`${width - 1},${height - 1}`],
-          goal: ({ x, y }) => x === 0 && y === 0,
-          node: root[letters[`${width - 1},${height - 1}`]]!,
-          completed: false,
-        }
-      );
-
-      const solutions: Step[] = [];
-      let i = 0;
-      while (queue.length) {
-        if (signal.aborted) {
-          setState("aborted");
-          break;
-        }
-
-        if (i++ % 1000 === 0) {
-          await new Promise((resolve) => setTimeout(resolve, 0));
-        }
-
-        const step = queue.shift()!;
-        const { path, words, current, goal, node } = step;
-
-        const id = path[path.length - 1]!;
-        const [x, y] = id.split(",").map((v) => +v);
-
-        const wordCompleted = node._;
-        const completed = step.completed || goal({ x, y });
-
-        if (wordCompleted && completed) {
-          // We have made it across the grid *and* a valid word has been formed.
-          if (!solutions.length) {
-            solutions.push(step);
-            continue;
+          current: "",
+          node: {},
+        },
+        goal: (current) => {
+          if (!current.node._) {
+            return false;
           }
 
-          const best = solutions[0];
-          const comparison = compare(step, best);
-          if (comparison > 0) {
-            // This means that "best" is a shorter (ie, better)
-            // solution, and should be preferred
-            break;
+          if (current.goalX >= 0) {
+            if (
+              current.maxX !== current.goalX &&
+              current.minX !== current.goalX
+            ) {
+              return false;
+            }
           }
 
-          solutions.push(step);
-          continue;
-        }
-
-        const neighbors: CellId[] = [
-          [x - 1, y], // left
-          [x, y - 1], // top
-          [x + 1, y], // right
-          [x, y + 1], // bottom
-        ]
-          .map((xy) => xy.join(",") as CellId)
-          .filter((key) => !!letters[key])
-          .filter((key) => !path.includes(key));
-
-        neighbors.forEach((key) => {
-          const letter = letters[key];
-          const next = node[letter];
-          if (next) {
-            queue.push({
-              path: [...path, key],
-              words,
-              current: current + letter,
-              goal,
-              node: next,
-              completed: false,
-            });
+          if (current.goalY >= 0) {
+            if (
+              current.maxY !== current.goalY &&
+              current.minY !== current.goalY
+            ) {
+              return false;
+            }
           }
-        });
 
-        // If the current cell completes a word, then we need to consider what
-        // would happen if we started a new word instead of extending.
-        if (wordCompleted) {
-          const reconstructed = [...words, current];
-          neighbors.forEach((id) => {
-            const letter = letters[id];
-            const restart = root[letter]!;
-            queue.push({
-              path: [...path, id],
-              words: reconstructed,
-              current: letter,
-              goal,
-              node: restart,
-              completed: false,
-            });
-          });
-        }
-      }
-
-      const random = solutions[Math.floor(Math.random() * solutions.length)];
-      setSolution({
-        words: [...random.words, random.current],
-        path: random.path,
+          // We made a word and we spanned the grid -- I guess that means we're
+          // done?
+          return true;
+        },
+        h: (neighbor, current) => {
+          if (neighbor.current.length < current.current.length) {
+            // A new word was started. This is much more costly than using
+            // one word.
+            return 10;
+          }
+          return 1;
+        },
       });
-      setState("solved");
+
+      if (final) {
+        const solution: Solution = {
+          words: [...final.words, final.current],
+          path: final.path,
+        };
+        setSolution(solution);
+        setState("solved");
+      } else {
+        setSolution(undefined);
+        setState("aborted");
+      }
     },
     [height, letters, root, width]
   );

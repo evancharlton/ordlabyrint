@@ -7,10 +7,7 @@ export const pq = <T = string | number>(...items: T[]) => {
 
   return {
     length: () => queue.length,
-    take: () => {
-      const first = queue.shift();
-      return first;
-    },
+    take: () => queue.shift(),
     put: (key: T, value: number) => {
       scores.set(key, value);
 
@@ -27,7 +24,7 @@ export const pq = <T = string | number>(...items: T[]) => {
       // Hacky little binary search to find out where it goes.
       let min = 0;
       let max = queue.length;
-      let center;
+      let center = 0;
       let limit = 1000;
       while (max - min > 1) {
         center = min + Math.floor((max - min) / 2);
@@ -49,9 +46,6 @@ export const pq = <T = string | number>(...items: T[]) => {
         }
       }
 
-      if (center === undefined) {
-        throw new Error("center is undefined");
-      }
       queue.splice(center, 0, key);
     },
   };

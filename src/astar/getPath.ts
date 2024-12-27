@@ -1,7 +1,7 @@
-import { CellId } from "../GridProvider";
+import { Keyable } from "./types";
 
-export const getPath = <T = CellId>(
-  cameFrom: Map<T, T>,
+export const getPath = <T extends Keyable>(
+  cameFrom: Map<string, T>,
   current: T,
   length = Number.MAX_SAFE_INTEGER
 ) => {
@@ -9,7 +9,7 @@ export const getPath = <T = CellId>(
   const out: T[] = [];
   while (n) {
     out.unshift(n);
-    n = cameFrom.get(n);
+    n = cameFrom.get(n.key());
     if (out.length >= length) {
       break;
     }
