@@ -41,6 +41,7 @@ export const Grid = () => {
               controller?.abort("cancelled");
               return;
             }
+            case "unsolvable":
             case "solved":
             case "pending":
             case "aborted": {

@@ -33,7 +33,7 @@ export const useSolve2 = () => {
   const { width, height } = useGridSize();
   const { letters } = useGrid();
   const [state, setState] = useState<
-    "pending" | "solving" | "aborted" | "solved"
+    "pending" | "solving" | "aborted" | "solved" | "unsolvable"
   >("pending");
   const [progress, setProgress] = useState<number>(0);
   const [solution, setSolution] = useState<Solution | undefined>();
@@ -42,7 +42,7 @@ export const useSolve2 = () => {
     async (signal: AbortSignal) => {
       setState("solving");
 
-      const [final, _path] = await astar<Step>({
+      const [final] = await astar<Step>({
         signal,
         onProgress: (v) => {
           setProgress(v);
@@ -255,7 +255,6 @@ export const useSolve2 = () => {
           return 1;
         },
       });
-
       if (final) {
         const solution: Solution = {
           words: [...final.words, final.current],
@@ -265,7 +264,7 @@ export const useSolve2 = () => {
         setState("solved");
       } else {
         setSolution(undefined);
-        setState("aborted");
+        setState("unsolvable");
       }
     },
     [height, letters, root, width]

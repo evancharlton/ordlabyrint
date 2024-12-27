@@ -71,6 +71,5 @@ export const astar = async <T extends Keyable>({
       }
     }
   }
-
-  throw new Error(`No path found: astar(..)`);
+  return [undefined, () => undefined] as const;
 };

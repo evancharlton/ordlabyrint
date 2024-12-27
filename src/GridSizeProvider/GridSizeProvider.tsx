@@ -4,6 +4,7 @@ import { GridSizeContext } from "./context";
 
 const SIZE = /^([\d]+)x([\d]+)$/;
 const MAX_SIZE = 21;
+const MIN_SIZE = 4;
 
 export const GridSizeProvider = () => {
   const navigate = useNavigate();
@@ -17,8 +18,8 @@ export const GridSizeProvider = () => {
   const value = useMemo(() => {
     const [_, width, height] = size?.match(SIZE) ?? [];
     return {
-      width: Math.min(+width, MAX_SIZE),
-      height: Math.min(+height, MAX_SIZE),
+      width: Math.max(Math.min(Math.floor(+width), MAX_SIZE), MIN_SIZE),
+      height: Math.max(Math.min(Math.floor(+height), MAX_SIZE), MIN_SIZE),
     };
   }, [size]);
 
