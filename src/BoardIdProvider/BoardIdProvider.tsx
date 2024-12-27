@@ -2,10 +2,15 @@ import React from "react";
 import { BoardIdContext } from "./context";
 import { useParams } from "react-router";
 import { mulberry32 } from "../random";
+import { useGridSize } from "../GridSizeProvider";
 
 const useDateId = () => {
+  const { width, height } = useGridSize();
   const now = new Date();
-  return [now.getFullYear(), now.getMonth(), now.getDate()].join("-");
+  return (
+    [now.getFullYear(), now.getMonth(), now.getDate()].join("-") +
+    `@${width}x${height}`
+  );
 };
 
 type Props = {
