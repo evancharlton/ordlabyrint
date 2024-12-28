@@ -28,7 +28,7 @@ type Step = Keyable & {
   node: Trie;
 };
 
-export const useSolve2 = () => {
+export const useSolve = () => {
   const { trie: root } = useWords();
   const { width, height } = useGridSize();
   const { letters } = useGrid();

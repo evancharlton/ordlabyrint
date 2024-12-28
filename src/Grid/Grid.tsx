@@ -2,7 +2,7 @@ import { ReactNode, useMemo, useState } from "react";
 import { useGrid } from "../GridProvider";
 import { useGridSize } from "../GridSizeProvider";
 import { CellId } from "../GridProvider";
-import { useSolve2 as useSolve } from "./useSolve";
+import { useSolve } from "./useSolve";
 import { neverGuard } from "../neverGuard";
 import classes from "./Grid.module.css";
 
