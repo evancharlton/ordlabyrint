@@ -1,3 +1,4 @@
 .used {
-  text-transform: uppercase;
+  --intensity: 0;
+  background-color: rgba(from var(--path-color) r g b / var(--intensity));
 }

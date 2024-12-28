@@ -18,11 +18,15 @@ export const Grid = () => {
     for (let y = 0; y < height; y += 1) {
       for (let x = 0; x < width; x += 1) {
         const key: CellId = `${x},${y}`;
+
+        const i = solution?.path.indexOf(key) ?? 0;
+        const percent = (i + 1) / (solution?.path.length ?? 1);
         out.push(
           <button
             key={key}
             disabled={false}
             className={solution?.path?.includes(key) ? classes.used : undefined}
+            style={{ [`--intensity`]: percent }}
           >
             {letters[key]}
           </button>
