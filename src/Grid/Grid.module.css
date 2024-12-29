@@ -1,4 +1,11 @@
-.used {
+.letter {
+  border: 4px solid transparent;
+}
+
+.solution {
+}
+
+.building {
   --intensity: 0;
-  background-color: rgba(from var(--path-color) r g b / var(--intensity));
+  border-color: rgba(from var(--path-color) r g b / var(--intensity));
 }

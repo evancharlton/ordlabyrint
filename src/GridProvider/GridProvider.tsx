@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useMemo } from "react";
+import { ReactNode, useMemo } from "react";
 import { CellId, GridContext } from "./context";
 import { useGridSize } from "../GridSizeProvider";
 import { useBoardId } from "../BoardIdProvider";
@@ -30,17 +30,10 @@ const useGridLetters = (): Record<CellId, Letter> => {
 export const GridProvider = ({ children }: { children: ReactNode }) => {
   const letters = useGridLetters();
 
-  const addStep = useCallback((id: CellId) => {
-    console.log(id);
-  }, []);
-
   return (
     <GridContext.Provider
       value={{
         letters,
-        allowedIds: useMemo(() => ({}), []),
-        path: useMemo(() => [], []),
-        addStep,
       }}
     >
       <SolutionProvider>{children}</SolutionProvider>

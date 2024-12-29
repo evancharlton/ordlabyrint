@@ -6,32 +6,57 @@ import { useSolve } from "./useSolve";
 import { neverGuard } from "../neverGuard";
 import classes from "./Grid.module.css";
 import { Link, useParams } from "react-router";
+import { useGamePlay } from "../GameStateProvider";
+
+const getPercents = (
+  words: string[],
+  path: CellId[]
+): Record<CellId, number> => {
+  const percents: Record<CellId, number> = {};
+  const wordsArray = [...(words ?? [])];
+  let word = wordsArray.shift();
+  let wordI = 0;
+  for (let step = 0; step < (path.length ?? 0); step += 1) {
+    if (!word) {
+      throw new Error("Walked out of words");
+    }
+
+    const stepXY = path[step];
+    percents[stepXY] = (wordI + 1) / word.length;
+    wordI += 1;
+    if (wordI === word.length) {
+      word = wordsArray.shift();
+      wordI = 0;
+    }
+  }
+
+  return percents;
+};
 
 export const Grid = () => {
-  const { letters, path } = useGrid();
+  const { letters } = useGrid();
   const { width, height } = useGridSize();
+  const {
+    addLetter,
+    addWord,
+    allowedIds,
+    current,
+    error,
+    path,
+    removeLetter,
+    reset,
+    words,
+  } = useGamePlay();
 
   const { solve, state, solution } = useSolve();
   const [controller, setController] = useState<AbortController | undefined>();
 
   const grid = useMemo(() => {
-    const percents: Record<CellId, number> = {};
-    const words = [...(solution?.words ?? [])];
-    let word = words.shift();
-    let wordI = 0;
-    for (let step = 0; step < (solution?.path.length ?? 0); step += 1) {
-      if (!word) {
-        throw new Error("Wwalked out of words");
-      }
-
-      const stepXY = solution!.path[step];
-      percents[stepXY] = (wordI + 1) / word.length;
-      wordI += 1;
-      if (wordI === word.length) {
-        word = words.shift();
-        wordI = 0;
-      }
-    }
+    const solutionPercents = getPercents(
+      [...(solution?.words ?? [])],
+      solution?.path ?? []
+    );
+    const pathPercents = getPercents([...words, current as string], path);
 
     const out: ReactNode[] = [];
     for (let y = 0; y < height; y += 1) {
@@ -41,9 +66,25 @@ export const Grid = () => {
         out.push(
           <button
             key={key}
-            disabled={false}
-            className={key in percents ? classes.used : undefined}
-            style={{ [`--intensity`]: percents[key] }}
+            disabled={!allowedIds[key]}
+            onClick={() => {
+              if (path.includes(key)) {
+                removeLetter(key);
+              } else {
+                addLetter(key);
+              }
+            }}
+            className={[
+              classes.letter,
+              key in solutionPercents ? classes.used : undefined,
+              key in pathPercents ? classes.building : undefined,
+            ]
+              .filter(Boolean)
+              .join(" ")}
+            style={{
+              [`--intensity`]:
+                solutionPercents[key] ?? pathPercents[key] ?? undefined,
+            }}
           >
             {letters[key]}
           </button>
@@ -51,7 +92,18 @@ export const Grid = () => {
       }
     }
     return out;
-  }, [height, letters, solution, width]);
+  }, [
+    addLetter,
+    allowedIds,
+    height,
+    letters,
+    path,
+    removeLetter,
+    solution?.path,
+    solution?.words,
+    width,
+    words,
+  ]);
 
   const { lang, size } = useParams();
 
@@ -82,8 +134,9 @@ export const Grid = () => {
       >
         {state}
       </button>
+      <button onClick={() => addWord()}>Word</button>
+      <button onClick={() => reset()}>Reset</button>
       {state === "solved" ? <div>{solution?.words.join(" - ")}</div> : null}
-      <div>{path.join(" - ")}</div>
       <div
         style={{
           display: "grid",
@@ -93,6 +146,9 @@ export const Grid = () => {
       >
         {grid}
       </div>
+      <pre style={{ textAlign: "left" }}>
+        {JSON.stringify({ current, error, words, path, allowedIds }, null, 2)}
+      </pre>
     </div>
   );
 };

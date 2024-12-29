@@ -1,4 +1,5 @@
 import BoardIdProvider from "../BoardIdProvider";
+import { GameStateProvider } from "../GameStateProvider";
 import Grid from "../Grid";
 import GridProvider from "../GridProvider";
 
@@ -7,7 +8,9 @@ export const Play = () => {
   return (
     <BoardIdProvider>
       <GridProvider>
-        <Grid />
+        <GameStateProvider>
+          <Grid />
+        </GameStateProvider>
       </GridProvider>
     </BoardIdProvider>
   );
