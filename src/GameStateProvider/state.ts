@@ -138,7 +138,7 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
         };
       }
 
-      if (!Date.now() && !state.node?._) {
+      if (!state.node?._) {
         return {
           ...state,
           error: "Not a word",
