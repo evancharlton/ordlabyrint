@@ -13,6 +13,7 @@
   -moz-osx-font-smoothing: grayscale;
 
   --path-color: rgb(136, 4, 244);
+  --solution-color: rgb(22, 173, 68);
 }
 
 a {

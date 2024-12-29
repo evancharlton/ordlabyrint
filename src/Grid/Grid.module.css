@@ -1,11 +1,12 @@
 .letter {
   border: 4px solid transparent;
+  --intensity: 0;
 }
 
 .solution {
+  background-color: rgba(from var(--solution-color) r g b / var(--intensity));
 }
 
 .building {
-  --intensity: 0;
   border-color: rgba(from var(--path-color) r g b / var(--intensity));
 }

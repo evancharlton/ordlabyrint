@@ -56,6 +56,7 @@ export const Grid = () => {
       [...(solution?.words ?? [])],
       solution?.path ?? []
     );
+
     const pathPercents = getPercents([...words, current as string], path);
 
     const out: ReactNode[] = [];
@@ -76,7 +77,7 @@ export const Grid = () => {
             }}
             className={[
               classes.letter,
-              key in solutionPercents ? classes.used : undefined,
+              key in solutionPercents ? classes.solution : undefined,
               key in pathPercents ? classes.building : undefined,
             ]
               .filter(Boolean)
@@ -95,6 +96,7 @@ export const Grid = () => {
   }, [
     addLetter,
     allowedIds,
+    current,
     height,
     letters,
     path,
