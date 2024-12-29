@@ -247,12 +247,20 @@ export const useSolve = () => {
           return true;
         },
         h: (neighbor, current) => {
-          if (neighbor.current.length < current.current.length) {
-            // A new word was started. This is much more costly than using
-            // one word.
-            return 10;
-          }
-          return 1;
+          const wordCost =
+            // A new word was started. This is much more costly than using one
+            // word.
+            neighbor.current.length < current.current.length ? 2 : 1;
+
+          const distance =
+            current.goalX >= 0 && current.goalY >= 0
+              ? Math.abs(neighbor.x - current.goalX) +
+                Math.abs(neighbor.y - current.goalY)
+              : current.goalX >= 0
+                ? Math.abs(neighbor.x - current.goalX)
+                : Math.abs(neighbor.y - current.goalY);
+
+          return distance + wordCost;
         },
       });
       if (final) {
