@@ -5,6 +5,7 @@ import { CellId } from "../GridProvider";
 import { useSolve } from "./useSolve";
 import { neverGuard } from "../neverGuard";
 import classes from "./Grid.module.css";
+import { Link, useParams } from "react-router";
 
 export const Grid = () => {
   const { letters, path } = useGrid();
@@ -36,8 +37,11 @@ export const Grid = () => {
     return out;
   }, [height, letters, solution?.path, width]);
 
+  const { lang, size } = useParams();
+
   return (
     <div>
+      <Link to={`/${lang}/${size}/${Date.now()}`}>New</Link>
       <button
         onClick={() => {
           switch (state) {
