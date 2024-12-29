@@ -15,19 +15,35 @@ export const Grid = () => {
   const [controller, setController] = useState<AbortController | undefined>();
 
   const grid = useMemo(() => {
+    const percents: Record<CellId, number> = {};
+    const words = [...(solution?.words ?? [])];
+    let word = words.shift();
+    let wordI = 0;
+    for (let step = 0; step < (solution?.path.length ?? 0); step += 1) {
+      if (!word) {
+        throw new Error("Wwalked out of words");
+      }
+
+      const stepXY = solution!.path[step];
+      percents[stepXY] = (wordI + 1) / word.length;
+      wordI += 1;
+      if (wordI === word.length) {
+        word = words.shift();
+        wordI = 0;
+      }
+    }
+
     const out: ReactNode[] = [];
     for (let y = 0; y < height; y += 1) {
       for (let x = 0; x < width; x += 1) {
         const key: CellId = `${x},${y}`;
 
-        const i = solution?.path.indexOf(key) ?? 0;
-        const percent = (i + 1) / (solution?.path.length ?? 1);
         out.push(
           <button
             key={key}
             disabled={false}
-            className={solution?.path?.includes(key) ? classes.used : undefined}
-            style={{ [`--intensity`]: percent }}
+            className={key in percents ? classes.used : undefined}
+            style={{ [`--intensity`]: percents[key] }}
           >
             {letters[key]}
           </button>
@@ -35,7 +51,7 @@ export const Grid = () => {
       }
     }
     return out;
-  }, [height, letters, solution?.path, width]);
+  }, [height, letters, solution, width]);
 
   const { lang, size } = useParams();
 
