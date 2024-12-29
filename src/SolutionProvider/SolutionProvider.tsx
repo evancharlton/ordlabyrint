@@ -1,16 +1,5 @@
-import {
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { ReactNode, useCallback, useMemo } from "react";
 import { SolutionContext } from "./context";
-import { useBestSolution } from "./useBestSolution";
-import { CellId, useGrid } from "../GridProvider";
-import { useGridSize } from "../GridSizeProvider";
-import { useWords } from "../LanguageProvider";
 
 export const SolutionProvider = ({ children }: { children: ReactNode }) => {
   // const { words: dictionary } = useWords();

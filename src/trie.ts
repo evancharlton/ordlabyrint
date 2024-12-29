@@ -36,6 +36,11 @@ export type Trie = {
 
 export type Letter = keyof Omit<Trie, "_">;
 
+export type Letters = {
+  [index: number]: Letter;
+  length: number;
+};
+
 export const construct = (words: string[]): Readonly<Trie> => {
   console.time("construct-trie");
   const root: Trie = {};

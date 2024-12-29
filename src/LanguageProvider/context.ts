@@ -1,10 +1,10 @@
 import { createContext, useContext } from "react";
-import { Trie } from "../trie";
+import { Letters, Trie } from "../trie";
 
 export const LanguageContext = createContext<
   | {
       words: string[];
-      letters: string;
+      letters: Letters;
       trie: Trie;
     }
   | undefined

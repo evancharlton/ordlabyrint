@@ -2,13 +2,14 @@ import { useEffect, useReducer } from "react";
 import { Outlet, useParams } from "react-router";
 import { LanguageContext } from "./context";
 import { reducer, State } from "./state";
+import { Letters } from "../trie";
 
 export const LanguageProvider = () => {
   const { lang } = useParams();
   const [{ letters, words, error, trie }, dispatch] = useReducer(reducer, {
     error: undefined,
     words: [],
-    letters: "",
+    letters: "" as Letters,
     trie: {},
   } satisfies State);
 
@@ -51,9 +52,9 @@ export const LanguageProvider = () => {
         if (!res.ok) {
           throw new Error("Response is not ok");
         }
-        return res.text();
+        return res.text() as Promise<Letters>;
       })
-      .then((letters: string) => {
+      .then((letters: Letters) => {
         dispatch({ action: "add-letters", letters });
       })
       .catch((ex) => {

@@ -9,7 +9,7 @@ export const getPath = <T extends Keyable>(
   const out: T[] = [];
   while (n) {
     out.unshift(n);
-    n = cameFrom.get(n.key());
+    n = cameFrom.get(n.key);
     if (out.length >= length) {
       break;
     }

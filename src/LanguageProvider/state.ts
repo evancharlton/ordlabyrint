@@ -1,18 +1,18 @@
 import { Reducer } from "react";
 import { neverGuard } from "../neverGuard";
-import { construct, Trie } from "../trie";
+import { construct, Letters, Trie } from "../trie";
 
 export type State = {
   error: Error | undefined;
   words: string[];
-  letters: string;
+  letters: Letters;
   trie: Trie;
 };
 
 type Action =
   | { action: "start-loading" }
   | { action: "add-words"; words: string[] }
-  | { action: "add-letters"; letters: string }
+  | { action: "add-letters"; letters: Letters }
   | { action: "add-error"; error: Error };
 
 export const reducer: Reducer<State, Action> = (state, update) => {
@@ -22,7 +22,7 @@ export const reducer: Reducer<State, Action> = (state, update) => {
       return {
         error: undefined,
         words: [],
-        letters: "",
+        letters: "" as Letters,
         trie: {},
       };
     }
