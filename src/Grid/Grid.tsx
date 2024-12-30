@@ -11,19 +11,21 @@ const getPercents = (
   path: CellId[]
 ): Record<CellId, number> => {
   const percents: Record<CellId, number> = {};
-  const wordsArray = [...words];
-  let word = wordsArray.shift();
+  let w = 0;
   let wordI = 0;
   for (let step = 0; step < (path.length ?? 0); step += 1) {
+    const stepXY = path[step];
+
+    const word = words[w];
     if (!word) {
-      break;
+      console.warn({ w, wordI, words, percents, step, stepXY });
+      throw new Error("Walked out of the words");
     }
 
-    const stepXY = path[step];
     percents[stepXY] = (wordI + 1) / word.length;
     wordI += 1;
     if (wordI === word.length) {
-      word = wordsArray.shift();
+      w += 1;
       wordI = 0;
     }
   }

@@ -46,7 +46,7 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
 
     case "remove-letter": {
       const { id } = update;
-      const { grid, path, root, words } = state;
+      const { grid, path, root, words: oldWords, current: oldCurrent } = state;
       const index = path.indexOf(id);
       if (index === -1) {
         return {
@@ -71,23 +71,31 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
       // after this (and the node itself).
       const newPath = path.slice(0, index + 1);
 
-      let remaining = newPath.length;
-      const oldWords = [...words];
       const newWords = [];
+
+      let wordIndex = 0;
       let current = "";
-      while (remaining > 0) {
-        const word = oldWords.shift();
+      let consumed = 0;
+
+      while (consumed < newPath.length) {
+        const word = oldWords[wordIndex++];
+        const remaining = newPath.length - consumed;
         if (!word) {
+          // We're out of words - most likely, the user is trimming before any
+          // words have been added.
+          current = (oldCurrent as string).substring(0, index + 1);
           break;
         }
 
-        if (remaining >= word.length) {
-          newWords.push(word);
-          remaining -= word.length;
-        } else {
-          current = word.substring(0, remaining);
+        if (word.length > remaining) {
+          // The latest word is the one being trimmed - slice it off and into
+          // the current field.
+          current = word.substring(consumed + 1);
           break;
         }
+
+        newWords.push(word);
+        consumed += word.length;
       }
 
       return {
