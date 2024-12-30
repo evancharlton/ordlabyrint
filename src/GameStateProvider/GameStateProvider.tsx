@@ -1,10 +1,11 @@
-import { ReactNode, useCallback, useMemo, useReducer } from "react";
+import { ReactNode, useCallback, useEffect, useMemo, useReducer } from "react";
 import { CellId, useGrid } from "../GridProvider";
 import { GameStateContext } from "./context";
 import { reducer, State } from "./state";
 import { useGridSize } from "../GridSizeProvider";
 import { useWords } from "../LanguageProvider";
 import { Letters } from "../trie";
+import { useSolution } from "../SolutionProvider";
 
 export const GameStateProvider = ({ children }: { children: ReactNode }) => {
   const { letters } = useGrid();
@@ -18,7 +19,15 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
     node: trie,
     root: trie,
     grid: letters,
+    revealed: false,
   } satisfies State);
+
+  const { state } = useSolution();
+  useEffect(() => {
+    if (state === "solved") {
+      dispatch({ action: "set-revealed" });
+    }
+  }, [state]);
 
   const allowedIds = useMemo((): Record<CellId, true> => {
     if (path.length === 0) {

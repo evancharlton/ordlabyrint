@@ -39,21 +39,32 @@ export const Grid = () => {
   const { addLetter, allowedIds, current, error, path, removeLetter, words } =
     useGamePlay();
 
-  const { words: solutionWords, path: solutionPath } = useSolution();
+  const { state, words: solutionWords, path: solutionPath } = useSolution();
 
-  const grid = useMemo(() => {
-    const solutionPercents = getPercents(solutionWords, solutionPath);
-    const pathPercents = getPercents([...words, current as string], path);
+  const solutionPercents = useMemo(
+    () => getPercents(solutionWords, solutionPath),
+    [solutionPath, solutionWords]
+  );
+  const pathPercents = useMemo(
+    () => getPercents([...words, current as string], path),
+    [current, path, words]
+  );
 
-    const out: ReactNode[] = [];
+  const grid: ReactNode[] = useMemo(() => {
+    const grid: ReactNode[] = [];
     for (let y = 0; y < height; y += 1) {
       for (let x = 0; x < width; x += 1) {
         const key: CellId = `${x},${y}`;
 
-        out.push(
+        grid.push(
           <button
             key={key}
-            disabled={!allowedIds[key]}
+            disabled={
+              state === "solved" ||
+              state === "solving" ||
+              state === "unsolvable" ||
+              !allowedIds[key]
+            }
             onClick={() => {
               if (path.includes(key)) {
                 removeLetter(key);
@@ -78,19 +89,18 @@ export const Grid = () => {
         );
       }
     }
-    return out;
+    return grid;
   }, [
     addLetter,
     allowedIds,
-    current,
     height,
     letters,
     path,
+    pathPercents,
     removeLetter,
-    solutionPath,
-    solutionWords,
+    solutionPercents,
+    state,
     width,
-    words,
   ]);
 
   return (
