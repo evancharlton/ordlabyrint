@@ -149,7 +149,7 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
         };
       }
 
-      if (!node?._) {
+      if (import.meta.env.PROD && !node?._) {
         return {
           ...state,
           error: "Not a word",
