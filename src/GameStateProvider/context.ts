@@ -1,6 +1,7 @@
 import { createContext, useContext } from "react";
 import { CellId } from "../GridProvider";
 import { Letters } from "../trie";
+import { Direction } from "./types";
 
 export const GameStateContext = createContext<
   | {
@@ -11,6 +12,7 @@ export const GameStateContext = createContext<
       path: CellId[];
       reset: () => void;
       solved: boolean;
+      toggleDirection: (direction: Direction) => void;
       toggleLetter: (id: CellId) => void;
       words: string[];
     }

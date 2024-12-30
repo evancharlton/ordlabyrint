@@ -1,10 +1,11 @@
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useEffect, useMemo } from "react";
 import { useGrid } from "../GridProvider";
 import { useGridSize } from "../GridSizeProvider";
 import { CellId } from "../GridProvider";
 import classes from "./Grid.module.css";
 import { useGamePlay } from "../GameStateProvider";
 import { useSolution } from "../SolutionProvider";
+import { Direction } from "../GameStateProvider/types";
 
 const getPercents = (
   words: string[],
@@ -33,11 +34,30 @@ const getPercents = (
   return percents;
 };
 
+const DIRECTIONS: Record<
+  "ArrowLeft" | "ArrowRight" | "ArrowDown" | "ArrowUp",
+  Direction
+> = {
+  ArrowDown: "down",
+  ArrowLeft: "left",
+  ArrowRight: "right",
+  ArrowUp: "up",
+} as const;
+
 export const Grid = () => {
   const { letters } = useGrid();
   const { width, height } = useGridSize();
-  const { allowedIds, current, error, path, solved, toggleLetter, words } =
-    useGamePlay();
+  const {
+    addWord,
+    allowedIds,
+    current,
+    error,
+    path,
+    solved,
+    toggleDirection,
+    toggleLetter,
+    words,
+  } = useGamePlay();
 
   const { state, words: solutionWords, path: solutionPath } = useSolution();
 
@@ -98,6 +118,40 @@ export const Grid = () => {
     toggleLetter,
     width,
   ]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      switch (event.key) {
+        case "Enter":
+          addWord();
+          break;
+
+        case "ArrowUp":
+        case "ArrowDown":
+        case "ArrowRight":
+        case "ArrowLeft":
+          toggleDirection(DIRECTIONS[event.key]);
+          break;
+
+        case "Delete":
+        case "Backspace": {
+          if (path.length > 1) {
+            toggleLetter(path[path.length - 2]);
+          }
+          break;
+        }
+
+        default: {
+          console.log(event.type, event.key);
+        }
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [addWord, path, toggleDirection, toggleLetter]);
 
   return (
     <div>

@@ -2,6 +2,7 @@ import { Reducer } from "react";
 import { CellId } from "../GridProvider";
 import { neverGuard } from "../neverGuard";
 import { Letter, Letters, Trie } from "../trie";
+import { Direction } from "./types";
 
 export type State = {
   path: CellId[];
@@ -21,6 +22,7 @@ type Update =
   | { action: "set-revealed" }
   | { action: "set-solved" }
   | { action: "toggle-letter"; id: CellId }
+  | { action: "toggle-direction"; direction: Direction }
   | { action: "add-word" };
 
 const walk = (grid: State["grid"], root: State["root"], ids: CellId[]) => {
@@ -31,6 +33,13 @@ const walk = (grid: State["grid"], root: State["root"], ids: CellId[]) => {
   }
   return node;
 };
+
+const DELTAS = {
+  up: { dx: 0, dy: -1 },
+  right: { dx: 1, dy: 0 },
+  down: { dx: 0, dy: 1 },
+  left: { dx: -1, dy: 0 },
+} as const;
 
 export const reducer: Reducer<State, Update> = (state, update): State => {
   const { action } = update;
@@ -48,8 +57,27 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
       };
     }
 
+    case "toggle-direction": {
+      const { direction } = update;
+      const { path } = state;
+      if (path.length === 0) {
+        return state;
+      }
+
+      const last = path[path.length - 1];
+      const [x, y] = last.split(",").map((v) => +v);
+
+      const { dx, dy } = DELTAS[direction];
+
+      return reducer(state, {
+        action: "toggle-letter",
+        id: `${x + dx},${y + dy}`,
+      });
+    }
+
     case "toggle-letter": {
       const { id } = update;
+
       const {
         current: oldCurrent,
         grid,
@@ -60,6 +88,10 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
         solved,
         words: oldWords,
       } = state;
+
+      if (!grid[id]) {
+        return state;
+      }
 
       if (revealed || solved) {
         return state;

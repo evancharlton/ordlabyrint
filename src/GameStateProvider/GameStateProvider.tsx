@@ -7,6 +7,7 @@ import { useWords } from "../LanguageProvider";
 import { Letters } from "../trie";
 import { useSolution } from "../SolutionProvider";
 import { useHistory } from "../HistoryProvider";
+import { Direction } from "./types";
 
 export const GameStateProvider = ({ children }: { children: ReactNode }) => {
   const { letters } = useGrid();
@@ -69,6 +70,10 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
 
   const toggleLetter = useCallback((id: CellId) => {
     dispatch({ action: "toggle-letter", id });
+  }, []);
+
+  const toggleDirection = useCallback((direction: Direction) => {
+    dispatch({ action: "toggle-direction", direction });
   }, []);
 
   const addWord = useCallback(() => {
@@ -134,6 +139,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
         path,
         reset,
         solved,
+        toggleDirection,
         toggleLetter,
         words,
       }}
