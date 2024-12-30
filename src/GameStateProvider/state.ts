@@ -33,13 +33,14 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
   const { action } = update;
   switch (action) {
     case "reset": {
+      const { root } = state;
       return {
         ...state,
         path: [],
         current: "" as Letters,
         words: [],
         error: undefined,
-        node: state.root,
+        node: root,
       };
     }
 
@@ -62,7 +63,7 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
           current: "" as Letters,
           words: [],
           error: undefined,
-          node: state.root,
+          node: root,
         };
       }
 
@@ -131,14 +132,16 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
     }
 
     case "add-word": {
-      if (state.current.length < 3) {
+      const { current, node, root, words } = state;
+
+      if (current.length < 3) {
         return {
           ...state,
           error: "For kort",
         };
       }
 
-      if (!state.node?._) {
+      if (!node?._) {
         return {
           ...state,
           error: "Not a word",
@@ -148,8 +151,8 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
       return {
         ...state,
         current: "" as Letters,
-        words: [...state.words, state.current as string],
-        node: state.root,
+        words: [...words, current as string],
+        node: root,
         error: undefined,
       };
     }
