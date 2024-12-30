@@ -5,11 +5,7 @@ import { CellId, useGrid } from "../GridProvider";
 import { Trie } from "../trie";
 import { astar, type Keyable } from "../astar";
 import { SolverState } from "./context";
-
-type Solution = {
-  words: string[];
-  path: CellId[];
-};
+import { Solution } from "../HistoryProvider";
 
 type Step = Keyable & {
   x: number;
@@ -266,6 +262,7 @@ export const useSolve = () => {
         const solution: Solution = {
           words: [...final.words, final.current],
           path: final.path,
+          timestamp: Date.now(),
         };
         setSolution(solution);
         setState("solved");

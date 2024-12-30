@@ -9,6 +9,7 @@ export type State = {
   words: string[];
   error: string | undefined;
   revealed: boolean;
+  solved: boolean;
 
   node: Trie | undefined;
   root: Trie;
@@ -18,6 +19,7 @@ export type State = {
 type Update =
   | { action: "reset" }
   | { action: "set-revealed" }
+  | { action: "set-solved" }
   | { action: "remove-letter"; id: CellId }
   | { action: "add-letter"; id: CellId }
   | { action: "add-word" };
@@ -43,6 +45,7 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
         words: [],
         error: undefined,
         node: root,
+        solved: false,
       };
     }
 
@@ -54,10 +57,11 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
         root,
         words: oldWords,
         current: oldCurrent,
+        solved,
         revealed,
       } = state;
 
-      if (revealed) {
+      if (revealed || solved) {
         return state;
       }
 
@@ -124,9 +128,9 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
 
     case "add-letter": {
       const { id } = update;
-      const { grid, root, path, current, node, revealed } = state;
+      const { grid, root, path, current, node, solved, revealed } = state;
 
-      if (revealed) {
+      if (revealed || solved) {
         return state;
       }
 
@@ -158,9 +162,9 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
     }
 
     case "add-word": {
-      const { current, node, revealed, root, words } = state;
+      const { current, node, solved, revealed, root, words } = state;
 
-      if (revealed) {
+      if (revealed || solved) {
         return state;
       }
 
@@ -191,6 +195,13 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
       return {
         ...state,
         revealed: true,
+      };
+    }
+
+    case "set-solved": {
+      return {
+        ...state,
+        solved: true,
       };
     }
 

@@ -6,6 +6,7 @@ import { useGridSize } from "../GridSizeProvider";
 import { useWords } from "../LanguageProvider";
 import { Letters } from "../trie";
 import { useSolution } from "../SolutionProvider";
+import { useHistory } from "../HistoryProvider";
 
 export const GameStateProvider = ({ children }: { children: ReactNode }) => {
   const { letters } = useGrid();
@@ -20,6 +21,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
     root: trie,
     grid: letters,
     revealed: false,
+    solved: false,
   } satisfies State);
 
   const { state } = useSolution();
@@ -81,6 +83,51 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
     dispatch({ action: "reset" });
   }, []);
 
+  const solved = useMemo(() => {
+    if (words.length === 0) {
+      return false;
+    }
+
+    if (path.length < width || path.length < height) {
+      return false;
+    }
+
+    const [start] = path;
+    const [startX, startY] = start.split(",").map((v) => +v);
+    const [endX, endY] = [
+      startX === 0 ? width - 1 : 0,
+      startY === 0 ? height - 1 : 0,
+    ];
+
+    const corner =
+      start === `0,0` ||
+      start == `0,${height - 1}` ||
+      start === `${width - 1},0` ||
+      start === `${width - 1},${height - 1}`;
+
+    const opposite = (id: CellId) => {
+      const [x, y] = id.split(",").map((v) => +v);
+      if (corner) {
+        return x === endX && y === endY;
+      }
+      return x === endX || y === endY;
+    };
+
+    return !!path.find(opposite);
+  }, [height, path, width, words.length]);
+
+  const { add } = useHistory();
+  useEffect(() => {
+    if (solved) {
+      dispatch({ action: "set-solved" });
+      add({
+        words,
+        path,
+        timestamp: Date.now(),
+      });
+    }
+  }, [add, path, solved, words]);
+
   return (
     <GameStateContext.Provider
       value={{
@@ -92,6 +139,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
         path,
         removeLetter,
         reset,
+        solved,
         words,
       }}
     >

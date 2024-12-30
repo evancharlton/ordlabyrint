@@ -3,7 +3,6 @@ import { CellId, GridContext } from "./context";
 import { useGridSize } from "../GridSizeProvider";
 import { useBoardId } from "../BoardIdProvider";
 import { mulberry32, randomItem } from "../random";
-import SolutionProvider from "../SolutionProvider";
 import { useWords } from "../LanguageProvider";
 import { Letter } from "../trie";
 
@@ -36,7 +35,7 @@ export const GridProvider = ({ children }: { children: ReactNode }) => {
         letters,
       }}
     >
-      <SolutionProvider>{children}</SolutionProvider>
+      {children}
     </GridContext.Provider>
   );
 };

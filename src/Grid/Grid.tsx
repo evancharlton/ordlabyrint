@@ -36,8 +36,16 @@ const getPercents = (
 export const Grid = () => {
   const { letters } = useGrid();
   const { width, height } = useGridSize();
-  const { addLetter, allowedIds, current, error, path, removeLetter, words } =
-    useGamePlay();
+  const {
+    addLetter,
+    allowedIds,
+    current,
+    error,
+    path,
+    removeLetter,
+    solved,
+    words,
+  } = useGamePlay();
 
   const { state, words: solutionWords, path: solutionPath } = useSolution();
 
@@ -60,6 +68,7 @@ export const Grid = () => {
           <button
             key={key}
             disabled={
+              solved ||
               state === "solved" ||
               state === "solving" ||
               state === "unsolvable" ||
@@ -99,6 +108,7 @@ export const Grid = () => {
     pathPercents,
     removeLetter,
     solutionPercents,
+    solved,
     state,
     width,
   ]);

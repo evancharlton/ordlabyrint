@@ -12,6 +12,7 @@ export const GameStateContext = createContext<
       path: CellId[];
       removeLetter: (id: CellId) => void;
       reset: () => void;
+      solved: boolean;
       words: string[];
     }
   | undefined
