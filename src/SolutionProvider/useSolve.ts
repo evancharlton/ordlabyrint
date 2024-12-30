@@ -4,6 +4,7 @@ import { useGridSize } from "../GridSizeProvider";
 import { CellId, useGrid } from "../GridProvider";
 import { Trie } from "../trie";
 import { astar, type Keyable } from "../astar";
+import { SolverState } from "./context";
 
 type Solution = {
   words: string[];
@@ -32,9 +33,7 @@ export const useSolve = () => {
   const { trie: root } = useWords();
   const { width, height } = useGridSize();
   const { letters } = useGrid();
-  const [state, setState] = useState<
-    "pending" | "solving" | "aborted" | "solved" | "unsolvable"
-  >("pending");
+  const [state, setState] = useState<SolverState>("pending");
   const [progress, setProgress] = useState<number>(0);
   const [solution, setSolution] = useState<Solution | undefined>();
 

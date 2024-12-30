@@ -1,7 +1,25 @@
 import { createContext, useContext } from "react";
+import { CellId } from "../GridProvider";
+
+export type SolverState =
+  | "pending"
+  | "solving"
+  | "aborted"
+  | "solved"
+  | "unsolvable";
 
 export const SolutionContext = createContext<
-  { ids: number[]; words: string[]; begin: () => void } | undefined
+  | {
+      path: CellId[];
+      words: string[];
+
+      /** A unitless number indicating progress has happened. */
+      progress: number;
+
+      state: SolverState;
+      solve: (signal: AbortSignal) => void;
+    }
+  | undefined
 >(undefined);
 
 export const useSolution = () => {

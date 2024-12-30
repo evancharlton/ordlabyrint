@@ -1,0 +1,9 @@
+.playWrapper > span::before {
+  content: "-";
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+.playWrapper > span:first-child::before {
+  display: none;
+}

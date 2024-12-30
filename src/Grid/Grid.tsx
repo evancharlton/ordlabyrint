@@ -1,24 +1,22 @@
-import { ReactNode, useMemo, useState } from "react";
+import { ReactNode, useMemo } from "react";
 import { useGrid } from "../GridProvider";
 import { useGridSize } from "../GridSizeProvider";
 import { CellId } from "../GridProvider";
-import { useSolve } from "./useSolve";
-import { neverGuard } from "../neverGuard";
 import classes from "./Grid.module.css";
-import { Link, useParams } from "react-router";
 import { useGamePlay } from "../GameStateProvider";
+import { useSolution } from "../SolutionProvider";
 
 const getPercents = (
   words: string[],
   path: CellId[]
 ): Record<CellId, number> => {
   const percents: Record<CellId, number> = {};
-  const wordsArray = [...(words ?? [])];
+  const wordsArray = [...words];
   let word = wordsArray.shift();
   let wordI = 0;
   for (let step = 0; step < (path.length ?? 0); step += 1) {
     if (!word) {
-      throw new Error("Walked out of words");
+      break;
     }
 
     const stepXY = path[step];
@@ -36,27 +34,13 @@ const getPercents = (
 export const Grid = () => {
   const { letters } = useGrid();
   const { width, height } = useGridSize();
-  const {
-    addLetter,
-    addWord,
-    allowedIds,
-    current,
-    error,
-    path,
-    removeLetter,
-    reset,
-    words,
-  } = useGamePlay();
+  const { addLetter, allowedIds, current, error, path, removeLetter, words } =
+    useGamePlay();
 
-  const { solve, state, solution } = useSolve();
-  const [controller, setController] = useState<AbortController | undefined>();
+  const { words: solutionWords, path: solutionPath } = useSolution();
 
   const grid = useMemo(() => {
-    const solutionPercents = getPercents(
-      [...(solution?.words ?? [])],
-      solution?.path ?? []
-    );
-
+    const solutionPercents = getPercents(solutionWords, solutionPath);
     const pathPercents = getPercents([...words, current as string], path);
 
     const out: ReactNode[] = [];
@@ -101,44 +85,14 @@ export const Grid = () => {
     letters,
     path,
     removeLetter,
-    solution?.path,
-    solution?.words,
+    solutionPath,
+    solutionWords,
     width,
     words,
   ]);
 
-  const { lang, size } = useParams();
-
   return (
     <div>
-      <Link to={`/${lang}/${size}/${Date.now()}`}>New</Link>
-      <button
-        onClick={() => {
-          switch (state) {
-            case "solving": {
-              controller?.abort("cancelled");
-              return;
-            }
-            case "unsolvable":
-            case "solved":
-            case "pending":
-            case "aborted": {
-              const c = new AbortController();
-              setController(c);
-              solve(c.signal);
-              return;
-            }
-            default: {
-              return neverGuard(state, undefined);
-            }
-          }
-        }}
-      >
-        {state}
-      </button>
-      <button onClick={() => addWord()}>Word</button>
-      <button onClick={() => reset()}>Reset</button>
-      {state === "solved" ? <div>{solution?.words.join(" - ")}</div> : null}
       <div
         style={{
           display: "grid",
