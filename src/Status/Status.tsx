@@ -14,7 +14,9 @@ export const Status = () => {
             {word}
           </span>
         ))}
-        <span className={classes.currentWord}>{current as string}</span>
+        {current ? (
+          <span className={classes.currentWord}>{current as string}</span>
+        ) : null}
       </div>
       <div className={classes.solutionWrapper}>
         {solutionWords.map((word, i) => (
