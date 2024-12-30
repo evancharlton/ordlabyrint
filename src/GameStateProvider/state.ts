@@ -70,7 +70,7 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
       }
 
       if (index === 0) {
-        // Treat the zeroth one as a reset
+        // Treat the zeroth one as a sort of reset
         return {
           ...state,
           path: [],
@@ -104,7 +104,7 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
         if (word.length > remaining) {
           // The latest word is the one being trimmed - slice it off and into
           // the current field.
-          current = word.substring(consumed + 1);
+          current = word.substring(0, remaining);
           break;
         }
 
