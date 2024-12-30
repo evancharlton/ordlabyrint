@@ -4,15 +4,14 @@ import { Letters } from "../trie";
 
 export const GameStateContext = createContext<
   | {
-      addLetter: (id: CellId) => void;
       addWord: () => void;
       allowedIds: Record<CellId, true>;
       current: Letters;
       error: string | undefined;
       path: CellId[];
-      removeLetter: (id: CellId) => void;
       reset: () => void;
       solved: boolean;
+      toggleLetter: (id: CellId) => void;
       words: string[];
     }
   | undefined

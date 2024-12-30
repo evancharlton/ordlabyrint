@@ -67,16 +67,12 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
       );
   }, [height, letters, path, width]);
 
-  const addLetter = useCallback((id: CellId) => {
-    dispatch({ action: "add-letter", id });
+  const toggleLetter = useCallback((id: CellId) => {
+    dispatch({ action: "toggle-letter", id });
   }, []);
 
   const addWord = useCallback(() => {
     dispatch({ action: "add-word" });
-  }, []);
-
-  const removeLetter = useCallback((id: CellId) => {
-    dispatch({ action: "remove-letter", id });
   }, []);
 
   const reset = useCallback(() => {
@@ -131,15 +127,14 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
   return (
     <GameStateContext.Provider
       value={{
-        addLetter,
         addWord,
         allowedIds,
         current,
         error,
         path,
-        removeLetter,
         reset,
         solved,
+        toggleLetter,
         words,
       }}
     >

@@ -20,8 +20,7 @@ type Update =
   | { action: "reset" }
   | { action: "set-revealed" }
   | { action: "set-solved" }
-  | { action: "remove-letter"; id: CellId }
-  | { action: "add-letter"; id: CellId }
+  | { action: "toggle-letter"; id: CellId }
   | { action: "add-word" };
 
 const walk = (grid: State["grid"], root: State["root"], ids: CellId[]) => {
@@ -49,16 +48,17 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
       };
     }
 
-    case "remove-letter": {
+    case "toggle-letter": {
       const { id } = update;
       const {
-        grid,
-        path,
-        root,
-        words: oldWords,
         current: oldCurrent,
-        solved,
+        grid,
+        node,
+        path,
         revealed,
+        root,
+        solved,
+        words: oldWords,
       } = state;
 
       if (revealed || solved) {
@@ -67,9 +67,13 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
 
       const index = path.indexOf(id);
       if (index === -1) {
+        const nextLetter = grid[id];
         return {
           ...state,
-          error: "Trying to remove a letter not on the path",
+          path: [...path, id],
+          current: (oldCurrent + nextLetter) as Letters,
+          node: node?.[nextLetter],
+          error: undefined,
         };
       }
 
@@ -123,41 +127,6 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
         node: walk(grid, root, newPath),
         error: undefined,
         words: newWords,
-      };
-    }
-
-    case "add-letter": {
-      const { id } = update;
-      const { grid, root, path, current, node, solved, revealed } = state;
-
-      if (revealed || solved) {
-        return state;
-      }
-
-      if (path.includes(id)) {
-        return {
-          ...state,
-          error: "Trying to add an already-added letter",
-        };
-      }
-
-      if (path.length === 0) {
-        return {
-          ...state,
-          path: [id],
-          current: grid[id]! as Letters,
-          node: root[grid[id]],
-          error: undefined,
-        };
-      }
-
-      const nextLetter = grid[id];
-      return {
-        ...state,
-        path: [...path, id],
-        current: (current + nextLetter) as Letters,
-        node: node?.[nextLetter],
-        error: undefined,
       };
     }
 

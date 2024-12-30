@@ -36,16 +36,8 @@ const getPercents = (
 export const Grid = () => {
   const { letters } = useGrid();
   const { width, height } = useGridSize();
-  const {
-    addLetter,
-    allowedIds,
-    current,
-    error,
-    path,
-    removeLetter,
-    solved,
-    words,
-  } = useGamePlay();
+  const { allowedIds, current, error, path, solved, toggleLetter, words } =
+    useGamePlay();
 
   const { state, words: solutionWords, path: solutionPath } = useSolution();
 
@@ -75,11 +67,7 @@ export const Grid = () => {
               !allowedIds[key]
             }
             onClick={() => {
-              if (path.includes(key)) {
-                removeLetter(key);
-              } else {
-                addLetter(key);
-              }
+              toggleLetter(key);
             }}
             className={[
               classes.letter,
@@ -100,16 +88,14 @@ export const Grid = () => {
     }
     return grid;
   }, [
-    addLetter,
     allowedIds,
     height,
     letters,
-    path,
     pathPercents,
-    removeLetter,
     solutionPercents,
     solved,
     state,
+    toggleLetter,
     width,
   ]);
 
