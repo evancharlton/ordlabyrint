@@ -42,7 +42,6 @@ export type Letters = {
 };
 
 export const construct = (words: string[]): Readonly<Trie> => {
-  console.time("construct-trie");
   const root: Trie = {};
   for (const word of words) {
     let current = root;
@@ -55,7 +54,6 @@ export const construct = (words: string[]): Readonly<Trie> => {
     }
     current._ = true;
   }
-  console.timeEnd("construct-trie");
   Object.freeze(root);
   return root;
 };

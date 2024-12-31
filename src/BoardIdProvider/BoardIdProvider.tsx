@@ -22,7 +22,7 @@ export const BoardIdProvider = ({ children, id: providedId }: Props) => {
   const { id: urlId } = useParams();
   const defaultId = useDateId();
   const id = providedId ?? urlId ?? defaultId;
-  console.log(`BoardIdProvider re-render`);
+
   return (
     <BoardIdContext.Provider key={id} value={{ random: mulberry32(id), id }}>
       {children}

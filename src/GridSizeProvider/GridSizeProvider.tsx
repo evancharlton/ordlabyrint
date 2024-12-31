@@ -9,7 +9,6 @@ const MIN_SIZE = 4;
 export const GridSizeProvider = () => {
   const navigate = useNavigate();
   const { size } = useParams();
-  console.log(`GridSizeProvider re-rendered`);
 
   if (!size) {
     throw new Error("React router misconfigured");

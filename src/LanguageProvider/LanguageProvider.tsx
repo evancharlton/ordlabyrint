@@ -19,8 +19,6 @@ export const LanguageProvider = () => {
       ? "loading"
       : "loaded";
 
-  console.log(`LanguageProvider rerendered`);
-
   useEffect(() => {
     const abortController = new AbortController();
     dispatch({ action: "start-loading" });
