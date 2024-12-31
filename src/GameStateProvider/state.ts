@@ -15,6 +15,8 @@ export type State = {
   node: Trie | undefined;
   root: Trie;
   grid: Record<CellId, Letter>;
+  width: number;
+  height: number;
 };
 
 type Update =
@@ -40,6 +42,46 @@ const DELTAS = {
   down: { dx: 0, dy: 1 },
   left: { dx: -1, dy: 0 },
 } as const;
+
+const checkSolved = (state: State): State => {
+  const { height, path, width, words } = state;
+  if (words.length === 0) {
+    return state;
+  }
+
+  if (path.length < width || path.length < height) {
+    return state;
+  }
+
+  const [start] = path;
+  const [startX, startY] = start.split(",").map((v) => +v);
+  const [endX, endY] = [
+    startX === 0 ? width - 1 : 0,
+    startY === 0 ? height - 1 : 0,
+  ];
+
+  const corner =
+    start === `0,0` ||
+    start == `0,${height - 1}` ||
+    start === `${width - 1},0` ||
+    start === `${width - 1},${height - 1}`;
+
+  const opposite = (id: CellId) => {
+    const [x, y] = id.split(",").map((v) => +v);
+    if (corner) {
+      return x === endX && y === endY;
+    }
+    return x === endX || y === endY;
+  };
+
+  if (!path.find(opposite)) {
+    return state;
+  }
+
+  return reducer(state, {
+    action: "set-solved",
+  });
+};
 
 export const reducer: Reducer<State, Update> = (state, update): State => {
   const { action } = update;
@@ -183,13 +225,15 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
         };
       }
 
-      return {
+      const next: State = {
         ...state,
         current: "" as Letters,
         words: [...words, current as string],
         node: root,
         error: undefined,
       };
+
+      return checkSolved(next);
     }
 
     case "set-revealed": {
