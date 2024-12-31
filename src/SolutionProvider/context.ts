@@ -17,7 +17,8 @@ export const SolutionContext = createContext<
       progress: number;
 
       state: SolverState;
-      solve: (signal: AbortSignal) => void;
+      solve: () => void;
+      abort: () => void;
     }
   | undefined
 >(undefined);

@@ -12,6 +12,10 @@ import {
 import { usePageContext } from "../Page/context";
 import classes from "./HamburgerMenu.module.css";
 import { Solution, useHistory } from "../HistoryProvider";
+import { useGamePlay } from "../GameStateProvider";
+import { useBoardId } from "../BoardIdProvider";
+import { useSolution } from "../SolutionProvider";
+import { useNavigate, useParams } from "react-router";
 
 const PreviousSolution = ({ words }: Solution) => {
   return (
@@ -41,7 +45,12 @@ export const HamburgerMenu = () => {
     });
   }, [addHeaderItem]);
 
+  const { reset } = useGamePlay();
+  const { id } = useBoardId();
   const { previousSolutions } = useHistory();
+  const { solve } = useSolution();
+  const { lang, size } = useParams();
+  const navigate = useNavigate();
 
   return (
     <dialog key="hamburger" ref={dialogRef}>
@@ -50,10 +59,22 @@ export const HamburgerMenu = () => {
           <MdClose />
         </button>
       </div>
-      <button className={classes.action}>
+      <button
+        className={classes.action}
+        onClick={() => {
+          reset();
+          dialogRef.current?.close();
+        }}
+      >
         <MdRestartAlt /> Start på nytt
       </button>
-      <button className={classes.action}>
+      <button
+        className={classes.action}
+        onClick={() => {
+          alert(id);
+          dialogRef.current?.close();
+        }}
+      >
         <MdLink /> Del puslespill
       </button>
       <div className={classes.history}>
@@ -61,10 +82,21 @@ export const HamburgerMenu = () => {
           <PreviousSolution key={solution.timestamp} {...solution} />
         ))}
       </div>
-      <button className={classes.action}>
+      <button
+        className={classes.action}
+        onClick={() => {
+          solve();
+          dialogRef.current?.close();
+        }}
+      >
         <MdDoneAll /> Vis den best løsningen
       </button>
-      <button className={classes.action}>
+      <button
+        className={classes.action}
+        onClick={() => {
+          navigate(`/${lang}/${size}/${Date.now()}`);
+        }}
+      >
         <MdOutlineAutorenew /> Nytt puslespill
       </button>
       <button className={classes.action}>

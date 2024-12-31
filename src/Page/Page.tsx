@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { MdHelpOutline } from "react-icons/md";
-import { Link, Outlet, useLocation } from "react-router";
+import { Link, Outlet, useLocation, useParams } from "react-router";
 import classes from "./Page.module.css";
 import { HeaderBarItem, PageContext } from "./context";
 
@@ -12,6 +12,8 @@ const comparator = (
 };
 
 export const Page = () => {
+  const { lang } = useParams();
+
   const [headerItems, setHeaderItems] = useState<HeaderBarItem[]>([]);
 
   const addHeaderItem = useCallback((item: HeaderBarItem) => {
@@ -32,7 +34,7 @@ export const Page = () => {
     <div className={classes.page}>
       <div className={classes.header}>
         <h1>
-          <Link to="/">Ordlabyrint</Link>
+          <Link to={`/${lang || ""}`}>Ordlabyrint</Link>
         </h1>
         <div className={classes.buttons}>
           <button>

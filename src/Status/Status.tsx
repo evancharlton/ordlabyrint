@@ -8,7 +8,7 @@ export const Status = () => {
 
   return (
     <div className={classes.container}>
-      <div className={classes.playWrapper}>
+      <div className={[classes.sequence, classes.playWrapper].join(" ")}>
         {words.map((word, i) => (
           <span key={`${i}/${word}`} className={classes.foundWord}>
             {word}
@@ -18,7 +18,7 @@ export const Status = () => {
           <span className={classes.currentWord}>{current as string}</span>
         ) : null}
       </div>
-      <div className={classes.solutionWrapper}>
+      <div className={[classes.sequence, classes.solutionWrapper].join(" ")}>
         {solutionWords.map((word, i) => (
           <span key={`${i}/${word}`} className={classes.solutionWord}>
             {word}

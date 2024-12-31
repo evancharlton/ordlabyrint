@@ -3,7 +3,7 @@ import { Outlet, useNavigate, useParams } from "react-router";
 import { GridSizeContext } from "./context";
 
 const SIZE = /^([\d]+)x([\d]+)$/;
-const MAX_SIZE = 21;
+const MAX_SIZE = 15;
 const MIN_SIZE = 4;
 
 export const GridSizeProvider = () => {

@@ -3,11 +3,12 @@ import { SolutionContext } from "./context";
 import { useSolve } from "./useSolve";
 
 export const SolutionProvider = ({ children }: { children: ReactNode }) => {
-  const { progress, state, solve, solution } = useSolve();
+  const { abort, progress, state, solve, solution } = useSolve();
 
   return (
     <SolutionContext.Provider
       value={{
+        abort,
         progress,
         solve,
         state,

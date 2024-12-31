@@ -51,7 +51,6 @@ export const Grid = () => {
     addWord,
     allowedIds,
     current,
-    error,
     path,
     solved,
     toggleDirection,
@@ -160,9 +159,9 @@ export const Grid = () => {
       >
         {grid}
       </div>
-      <pre style={{ textAlign: "left" }}>
+      {/* <pre style={{ textAlign: "left" }}>
         {JSON.stringify({ current, error, words, path, allowedIds }, null, 2)}
-      </pre>
+      </pre> */}
     </div>
   );
 };

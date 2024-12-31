@@ -2,7 +2,6 @@ import { useNavigate, useParams } from "react-router";
 import { useGamePlay } from "../GameStateProvider";
 import classes from "./Buttons.module.css";
 import { useSolution } from "../SolutionProvider";
-import { useState } from "react";
 import { neverGuard } from "../neverGuard";
 
 export const Buttons = () => {
@@ -10,8 +9,7 @@ export const Buttons = () => {
   const { lang, size } = useParams();
   const navigate = useNavigate();
 
-  const [controller, setController] = useState<AbortController | undefined>();
-  const { state, solve } = useSolution();
+  const { abort, state, solve } = useSolution();
 
   return (
     <div className={classes.container}>
@@ -26,16 +24,14 @@ export const Buttons = () => {
         onClick={() => {
           switch (state) {
             case "solving": {
-              controller?.abort("cancelled");
+              abort();
               return;
             }
             case "unsolvable":
             case "solved":
             case "pending":
             case "aborted": {
-              const c = new AbortController();
-              setController(c);
-              solve(c.signal);
+              solve();
               return;
             }
             default: {
