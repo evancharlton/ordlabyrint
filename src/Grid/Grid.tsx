@@ -140,10 +140,6 @@ export const Grid = () => {
           }
           break;
         }
-
-        default: {
-          console.log(event.type, event.key);
-        }
       }
     };
 

@@ -6,9 +6,9 @@ import GridProvider from "../GridProvider";
 import HistoryProvider from "../HistoryProvider";
 import SolutionProvider from "../SolutionProvider";
 import Status from "../Status";
+import HamburgerMenu from "../HamburgerMenu";
 
 export const Play = () => {
-  console.log(`Play re-rendered`);
   return (
     <BoardIdProvider>
       <GridProvider>
@@ -18,6 +18,7 @@ export const Play = () => {
               <Status />
               <Grid />
               <Buttons />
+              <HamburgerMenu />
             </GameStateProvider>
           </SolutionProvider>
         </HistoryProvider>

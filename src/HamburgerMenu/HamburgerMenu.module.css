@@ -1,0 +1,9 @@
+.word::after {
+  content: "-";
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+.word:last-child::after {
+  display: none;
+}

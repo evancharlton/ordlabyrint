@@ -25,7 +25,6 @@ export const GridSizeProvider = () => {
 
   if (!SIZE.test(size)) {
     navigate("..");
-    return;
   }
 
   return (
