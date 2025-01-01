@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import classes from "./SizeChooser.module.css";
 
-const SIZES: (number | [number, number])[] = [4, 5, 7, 9] as const;
+const SIZES: (number | [number, number])[] = [4, 5, 6] as const;
 
 export const SizeChooser = () => {
   return (
