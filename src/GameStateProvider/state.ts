@@ -23,6 +23,7 @@ type Update =
   | { action: "reset" }
   | { action: "set-revealed" }
   | { action: "set-solved" }
+  | { action: "backspace" }
   | { action: "toggle-letter"; id: CellId }
   | { action: "toggle-direction"; direction: Direction }
   | { action: "add-word" };
@@ -97,6 +98,27 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
         node: root,
         solved: false,
       };
+    }
+
+    case "backspace": {
+      const { path, root } = state;
+      if (path.length === 0) {
+        return state;
+      }
+      if (path.length === 1) {
+        return {
+          ...state,
+          path: [],
+          current: "" as Letters,
+          words: [],
+          error: undefined,
+          node: root,
+        };
+      }
+      return reducer(state, {
+        action: "toggle-letter",
+        id: path[path.length - 2],
+      });
     }
 
     case "toggle-direction": {

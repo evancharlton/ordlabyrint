@@ -12,6 +12,7 @@ export const GameStateContext = createContext<
       path: CellId[];
       reset: () => void;
       solved: boolean;
+      backspace: () => void;
       toggleDirection: (direction: Direction) => void;
       toggleLetter: (id: CellId) => void;
       words: string[];

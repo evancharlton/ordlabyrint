@@ -50,6 +50,7 @@ export const Grid = () => {
   const {
     addWord,
     allowedIds,
+    backspace,
     current,
     path,
     solved,
@@ -134,9 +135,7 @@ export const Grid = () => {
 
         case "Delete":
         case "Backspace": {
-          if (path.length > 1) {
-            toggleLetter(path[path.length - 2]);
-          }
+          backspace();
           break;
         }
       }
@@ -146,22 +145,17 @@ export const Grid = () => {
     return () => {
       document.removeEventListener("keydown", onKeyDown);
     };
-  }, [addWord, path, toggleDirection, toggleLetter]);
+  }, [addWord, backspace, toggleDirection]);
 
   return (
-    <div>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: `repeat(${width}, 1fr)`,
-          gridTemplateRows: `repeat(${height}, 1fr)`,
-        }}
-      >
-        {grid}
-      </div>
-      {/* <pre style={{ textAlign: "left" }}>
-        {JSON.stringify({ current, error, words, path, allowedIds }, null, 2)}
-      </pre> */}
+    <div
+      className={classes.container}
+      style={{
+        gridTemplateColumns: `repeat(${width}, 1fr)`,
+        gridTemplateRows: `repeat(${height}, 1fr)`,
+      }}
+    >
+      {grid}
     </div>
   );
 };

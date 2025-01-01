@@ -1,1 +1,2 @@
-export { Page as default } from "./Page";
+export { Page as default, ButtonsPortal } from "./Page";
+export { Modal } from "./Modal";

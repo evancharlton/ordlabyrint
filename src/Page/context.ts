@@ -6,8 +6,23 @@ export type HeaderBarItem = {
   weight: number;
 };
 
+export type DialogKind =
+  | "hamburger"
+  | "settings"
+  | "share"
+  | "solve"
+  | "about"
+  | "rules"
+  | undefined;
+
 export const PageContext = createContext<
-  { addHeaderItem: (item: HeaderBarItem) => void } | undefined
+  | {
+      hamburgerContainer: Element | DocumentFragment | null;
+      dialog: DialogKind;
+      showDialog: (which: DialogKind) => void;
+      closeDialog: () => void;
+    }
+  | undefined
 >(undefined);
 
 export const usePageContext = () => {

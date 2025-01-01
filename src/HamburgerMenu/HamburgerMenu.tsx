@@ -16,6 +16,7 @@ import { useGamePlay } from "../GameStateProvider";
 import { useBoardId } from "../BoardIdProvider";
 import { useSolution } from "../SolutionProvider";
 import { useNavigate, useParams } from "react-router";
+import { ButtonsPortal } from "../Page";
 
 const PreviousSolution = ({ words }: Solution) => {
   return (
@@ -30,20 +31,7 @@ const PreviousSolution = ({ words }: Solution) => {
 };
 
 export const HamburgerMenu = () => {
-  const { addHeaderItem } = usePageContext();
-  const dialogRef = useRef<HTMLDialogElement>(null);
-
-  useEffect(() => {
-    addHeaderItem({
-      id: "hamburger",
-      item: (
-        <button onClick={() => dialogRef.current?.showModal()}>
-          <MdMenu />
-        </button>
-      ),
-      weight: 10,
-    });
-  }, [addHeaderItem]);
+  const { dialog, closeDialog, showDialog } = usePageContext();
 
   const { reset } = useGamePlay();
   const { id } = useBoardId();
@@ -52,59 +40,76 @@ export const HamburgerMenu = () => {
   const { lang, size } = useParams();
   const navigate = useNavigate();
 
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    if (dialog === "hamburger") {
+      dialogRef.current?.showModal();
+    } else {
+      dialogRef.current?.close();
+    }
+  }, [dialog]);
+
   return (
-    <dialog key="hamburger" ref={dialogRef}>
-      <div className={classes.header}>
-        <button onClick={() => dialogRef.current?.close()}>
-          <MdClose />
+    <>
+      <ButtonsPortal>
+        <button onClick={() => showDialog("hamburger")}>
+          <MdMenu />
         </button>
-      </div>
-      <button
-        className={classes.action}
-        onClick={() => {
-          reset();
-          dialogRef.current?.close();
-        }}
-      >
-        <MdRestartAlt /> Start på nytt
-      </button>
-      <button
-        className={classes.action}
-        onClick={() => {
-          alert(id);
-          dialogRef.current?.close();
-        }}
-      >
-        <MdLink /> Del puslespill
-      </button>
-      <div className={classes.history}>
-        {previousSolutions.map((solution) => (
-          <PreviousSolution key={solution.timestamp} {...solution} />
-        ))}
-      </div>
-      <button
-        className={classes.action}
-        onClick={() => {
-          solve();
-          dialogRef.current?.close();
-        }}
-      >
-        <MdDoneAll /> Vis den best løsningen
-      </button>
-      <button
-        className={classes.action}
-        onClick={() => {
-          navigate(`/${lang}/${size}/${Date.now()}`);
-        }}
-      >
-        <MdOutlineAutorenew /> Nytt puslespill
-      </button>
-      <button className={classes.action}>
-        <MdOutlineSettings /> Instillinger
-      </button>
-      <button className={classes.action}>
-        <MdInfoOutline /> Om Ordlabyrint
-      </button>
-    </dialog>
+      </ButtonsPortal>
+      <dialog ref={dialogRef} onClose={() => showDialog(undefined)}>
+        <div className={classes.header}>
+          <button onClick={() => closeDialog()}>
+            <MdClose />
+          </button>
+        </div>
+        <button
+          className={classes.action}
+          onClick={() => {
+            reset();
+            closeDialog();
+          }}
+        >
+          <MdRestartAlt /> Start på nytt
+        </button>
+        <button
+          className={classes.action}
+          onClick={() => {
+            alert(id);
+            closeDialog();
+          }}
+        >
+          <MdLink /> Del puslespill
+        </button>
+        <div className={classes.history}>
+          {previousSolutions.map((solution) => (
+            <PreviousSolution key={solution.timestamp} {...solution} />
+          ))}
+        </div>
+        <button
+          className={classes.action}
+          onClick={() => {
+            solve();
+            closeDialog();
+          }}
+        >
+          <MdDoneAll /> Vis den best løsningen
+        </button>
+        <button
+          className={classes.action}
+          onClick={() => {
+            navigate(`/${lang}/${size}/${Date.now()}`);
+          }}
+        >
+          <MdOutlineAutorenew /> Nytt puslespill
+        </button>
+        <button className={classes.action}>
+          <MdOutlineSettings /> Instillinger
+        </button>
+        <button className={classes.action}>
+          <MdInfoOutline /> Om Ordlabyrint
+        </button>
+      </dialog>
+    </>
   );
 };
