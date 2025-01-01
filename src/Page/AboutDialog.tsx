@@ -14,6 +14,16 @@ export const AboutDialog = () => {
           evancharlton@gmail.com
         </a>
       </p>
+      <hr />
+      <span
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        versjon <code>{import.meta.env.VITE_RELEASE ?? "development"}</code>
+      </span>
     </Modal>
   );
 };
