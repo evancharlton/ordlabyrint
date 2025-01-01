@@ -33,8 +33,14 @@
   }
 }
 
-.content p:last-child {
-  margin-bottom: 0px;
+.content {
+  hr {
+    border: 1px solid rgba(from var(--path-color) r g b / 0.15);
+  }
+
+  p:last-child {
+    margin-bottom: 0px;
+  }
 }
 
 @media (max-width: 600px) {
