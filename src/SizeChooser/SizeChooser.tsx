@@ -1,11 +1,23 @@
 import { Link } from "react-router";
+import classes from "./SizeChooser.module.css";
+
+const SIZES: (number | [number, number])[] = [4, 5, 7, 9] as const;
 
 export const SizeChooser = () => {
   return (
-    <>
-      <Link to="./5x5">5x5</Link>
-      <Link to="./9x9">9x9</Link>
-      <Link to="./11x11">11x11</Link>
-    </>
+    <div className={classes.container}>
+      {SIZES.map((size) => {
+        const x = typeof size === "number" ? size : size[0];
+        const y = typeof size === "number" ? size : size[1];
+
+        return (
+          <Link key={`${x}x${y}`} to={`./${x}x${y}`}>
+            {x}
+            <span>&#x2715;</span>
+            {y}
+          </Link>
+        );
+      })}
+    </div>
   );
 };

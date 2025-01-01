@@ -3,6 +3,7 @@ import { Outlet, useParams } from "react-router";
 import { LanguageContext } from "./context";
 import { reducer, State } from "./state";
 import { Letters } from "../trie";
+import { Loader } from "../Loader";
 
 export const LanguageProvider = () => {
   const { lang } = useParams();
@@ -69,7 +70,7 @@ export const LanguageProvider = () => {
   }, [lang]);
 
   if (state === "loading") {
-    return <h1>...</h1>;
+    return <Loader />;
   } else if (state === "loaded") {
     return (
       <LanguageContext.Provider value={{ words, letters, trie }}>
@@ -79,6 +80,6 @@ export const LanguageProvider = () => {
   } else if (state === "error") {
     return <h1>Error</h1>;
   } else {
-    return <h1>???</h1>;
+    return null;
   }
 };

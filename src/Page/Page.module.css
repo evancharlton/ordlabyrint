@@ -15,11 +15,34 @@
   h1 {
     padding: 8px;
     margin: 8px;
+
     a {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+
       font-size: 0.8em;
       color: white;
       font-weight: 700;
       text-transform: uppercase;
+    }
+
+    a:hover,
+    a:focus-visible {
+      filter: drop-shadow(0px 0px 8px #fff8);
+    }
+
+    img {
+      display: inline;
+      aspect-ratio: 1 / 1;
+      line-height: 1;
+      height: 1em;
+      width: 1em;
+
+      padding: 2px;
+      border: 1px solid #fff6;
+      border-radius: 4px;
     }
   }
 
@@ -49,6 +72,22 @@
     button:focus-visible {
       background-color: rgba(from var(--button-color) r g b / 0.5);
     }
+  }
+}
+
+.refresh {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(from var(--path-color) r g b / 1);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(from var(--path-color) r g b / 0);
+  }
+  100% {
+    box-shadow: 0 0 0 50px rgba(from var(--path-color) r g b / 0);
   }
 }
 
