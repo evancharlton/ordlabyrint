@@ -77,7 +77,6 @@ export const HamburgerMenu = () => {
         <button
           className={classes.action}
           onClick={() => {
-            console.log(`share`);
             showDialog("share");
           }}
         >
@@ -101,6 +100,7 @@ export const HamburgerMenu = () => {
           className={classes.action}
           onClick={() => {
             navigate(`/${lang}/${size}/${Date.now()}`);
+            closeDialog("hamburger");
           }}
         >
           <MdOutlineAutorenew /> Nytt puslespill
