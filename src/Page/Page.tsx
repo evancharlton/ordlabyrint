@@ -7,6 +7,7 @@ import { createPortal } from "react-dom";
 import { RulesDialog } from "./RulesDialog";
 import { Modal } from "./Modal";
 import { usePwa } from "../PwaContainer";
+import { SettingsDialog, SettingsProvider } from "../SettingsProvider";
 
 export const Page = () => {
   const { lang } = useParams();
@@ -16,55 +17,58 @@ export const Page = () => {
 
   const { updateNeeded, performUpdate } = usePwa();
   return (
-    <div className={classes.page}>
-      <div className={classes.header}>
-        <h1>
-          <Link to={`/${lang || ""}`}>
-            <img src="/ordlabyrint.svg" />
-            Ordlabyrint
-          </Link>
-        </h1>
-        <div
-          className={classes.buttons}
-          ref={(ref) => {
-            setButtons(ref);
-          }}
-        >
-          {updateNeeded ? (
-            <button
-              title="oppdater appen"
-              onClick={() => performUpdate()}
-              className={classes.refresh}
-            >
-              <MdOutlineRefresh />
+    <SettingsProvider>
+      <div className={classes.page}>
+        <div className={classes.header}>
+          <h1>
+            <Link to={`/${lang || ""}`}>
+              <img src="/ordlabyrint.svg" />
+              Ordlabyrint
+            </Link>
+          </h1>
+          <div
+            className={classes.buttons}
+            ref={(ref) => {
+              setButtons(ref);
+            }}
+          >
+            {updateNeeded ? (
+              <button
+                title="oppdater appen"
+                onClick={() => performUpdate()}
+                className={classes.refresh}
+              >
+                <MdOutlineRefresh />
+              </button>
+            ) : null}
+            <button onClick={() => setDialog("rules")}>
+              <MdHelpOutline />
             </button>
-          ) : null}
-          <button onClick={() => setDialog("rules")}>
-            <MdHelpOutline />
-          </button>
+          </div>
+        </div>
+        <div className={classes.content}>
+          <PageContext.Provider
+            value={{
+              hamburgerContainer: buttons,
+              dialog,
+              showDialog: setDialog,
+              closeDialog: useCallback(
+                (which: DialogKind) =>
+                  setDialog((v) => (v === which ? undefined : v)),
+                []
+              ),
+            }}
+          >
+            <Outlet />
+            <RulesDialog />
+            <Modal title="Ordlabyrint" kind="about">
+              <strong>Ordlabyrint</strong>
+            </Modal>
+            <SettingsDialog />
+          </PageContext.Provider>
         </div>
       </div>
-      <div className={classes.content}>
-        <PageContext.Provider
-          value={{
-            hamburgerContainer: buttons,
-            dialog,
-            showDialog: setDialog,
-            closeDialog: useCallback(
-              (which: DialogKind) =>
-                setDialog((v) => (v === which ? undefined : v)),
-              []
-            ),
-          }}
-        >
-          <Outlet />
-          <RulesDialog />
-          <Modal title="Ordlabyrint" kind="about">
-            <strong>Ordlabyrint</strong>
-          </Modal>
-        </PageContext.Provider>
-      </div>
-    </div>
+    </SettingsProvider>
   );
 };
 

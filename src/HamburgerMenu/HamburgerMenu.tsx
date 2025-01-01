@@ -105,7 +105,10 @@ export const HamburgerMenu = () => {
         >
           <MdOutlineAutorenew /> Nytt puslespill
         </button>
-        <button className={classes.action}>
+        <button
+          className={classes.action}
+          onClick={() => showDialog("settings")}
+        >
           <MdOutlineSettings /> Instillinger
         </button>
         <button className={classes.action} onClick={() => showDialog("about")}>
