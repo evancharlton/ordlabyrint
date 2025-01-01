@@ -1,6 +1,5 @@
 .dialog {
-  width: 80vw;
-  max-width: 500px;
+  width: clamp(400px, 80vw, 600px);
   padding: 8px;
 
   border: 1px solid rgba(from var(--button-color) r g b / 0.5);
@@ -31,5 +30,29 @@
     font-size: 1.5em;
     padding: 8px;
     aspect-ratio: 1 / 1;
+  }
+}
+
+.content p:last-child {
+  margin-bottom: 0px;
+}
+
+@media (max-width: 600px) {
+  .dialog[open] {
+    border-width: 1px 0 0 0;
+    width: 100vw;
+    padding: 8px 0px 0px 0px;
+    max-width: unset;
+    border-radius: 0;
+    max-height: 90dvh;
+    margin-bottom: 0px;
+  }
+
+  .dialog .header h2 {
+    padding-left: 8px;
+  }
+
+  .dialog .content {
+    padding: 4px 8px 16px 8px;
   }
 }

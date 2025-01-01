@@ -5,9 +5,9 @@ import classes from "./Page.module.css";
 import { DialogKind, PageContext, usePageContext } from "./context";
 import { createPortal } from "react-dom";
 import { RulesDialog } from "./RulesDialog";
-import { Modal } from "./Modal";
 import { usePwa } from "../PwaContainer";
 import { SettingsDialog, SettingsProvider } from "../SettingsProvider";
+import { AboutDialog } from "./AboutDialog";
 
 export const Page = () => {
   const { lang } = useParams();
@@ -61,10 +61,8 @@ export const Page = () => {
           >
             <Outlet />
             <RulesDialog />
-            <Modal title="Ordlabyrint" kind="about">
-              <strong>Ordlabyrint</strong>
-            </Modal>
             <SettingsDialog />
+            <AboutDialog />
           </PageContext.Provider>
         </div>
       </div>

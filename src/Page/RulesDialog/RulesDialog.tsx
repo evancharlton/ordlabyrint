@@ -5,14 +5,13 @@ export const RulesDialog = () => {
     <Modal title="Reglene" kind="rules">
       <h3>Mål</h3>
       <p>
-        The goal is to find sequences of words which start on one edge and
-        eventually touch the opposite side.
+        Målet er å finne sekvenser av ord som starter på den ene kanten og
+        berører til slutt motsatt side.
       </p>
       <p>
-        If the sequence begins in one corner, then it must touch the opposite
-        corner.
+        Hvis sekvensen begynner i ett hjørne, må den berøre det motsatte hjørne.
       </p>
-      <p>Try to use as few words as possible!</p>
+      <p>Prøv å bruke så få ord som mulig!</p>
     </Modal>
   );
 };

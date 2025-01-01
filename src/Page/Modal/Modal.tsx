@@ -34,7 +34,7 @@ export const Modal = ({ children, kind, title, className }: Props) => {
           <MdClose />
         </button>
       </div>
-      {children}
+      <div className={classes.content}>{children}</div>
     </dialog>
   );
 };
