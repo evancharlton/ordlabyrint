@@ -58,16 +58,6 @@ button {
   color: var(--button-color);
 }
 
-button:hover,
-button:focus-visible {
-  border-color: currentColor;
-}
-
-button:disabled:hover,
-button:disabled:focus-visible {
-  border-color: transparent;
-}
-
 button:disabled,
 button:disabled {
   border-color: transparent;

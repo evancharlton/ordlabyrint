@@ -57,7 +57,11 @@ export const HamburgerMenu = () => {
           <MdMenu />
         </button>
       </ButtonsPortal>
-      <dialog ref={dialogRef} onClose={() => showDialog(undefined)}>
+      <dialog
+        className={classes.hamburger}
+        ref={dialogRef}
+        onClose={() => closeDialog()}
+      >
         <div className={classes.header}>
           <button onClick={() => closeDialog()}>
             <MdClose />
@@ -93,7 +97,7 @@ export const HamburgerMenu = () => {
             closeDialog();
           }}
         >
-          <MdDoneAll /> Vis den best løsningen
+          <MdDoneAll /> Vis den beste løsningen
         </button>
         <button
           className={classes.action}
