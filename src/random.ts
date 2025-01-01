@@ -3,13 +3,14 @@ type PRNG = () => number;
 type Seed = string | number;
 
 export const hash = (seed: Seed): number => {
-  if (typeof seed === "number") {
+  if (Number.isSafeInteger(+seed)) {
     return +seed;
   }
 
+  const stringSeed = String(seed);
   let h = 0;
-  for (let i = 0; i < seed.length; i++) {
-    h = (Math.imul(31, h) + seed.charCodeAt(i)) | 0;
+  for (let i = 0; i < stringSeed.length; i++) {
+    h = (Math.imul(31, h) + stringSeed.charCodeAt(i)) | 0;
   }
   return h;
 };

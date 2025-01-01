@@ -13,7 +13,6 @@ import { usePageContext } from "../Page/context";
 import classes from "./HamburgerMenu.module.css";
 import { Solution, useHistory } from "../HistoryProvider";
 import { useGamePlay } from "../GameStateProvider";
-import { useBoardId } from "../BoardIdProvider";
 import { useSolution } from "../SolutionProvider";
 import { useNavigate, useParams } from "react-router";
 import { ButtonsPortal } from "../Page";
@@ -34,7 +33,6 @@ export const HamburgerMenu = () => {
   const { dialog, closeDialog, showDialog } = usePageContext();
 
   const { reset } = useGamePlay();
-  const { id } = useBoardId();
   const { previousSolutions } = useHistory();
   const { solve } = useSolution();
   const { lang, size } = useParams();
@@ -60,10 +58,10 @@ export const HamburgerMenu = () => {
       <dialog
         className={classes.hamburger}
         ref={dialogRef}
-        onClose={() => closeDialog()}
+        onClose={() => closeDialog("hamburger")}
       >
         <div className={classes.header}>
-          <button onClick={() => closeDialog()}>
+          <button onClick={() => closeDialog("hamburger")}>
             <MdClose />
           </button>
         </div>
@@ -71,7 +69,7 @@ export const HamburgerMenu = () => {
           className={classes.action}
           onClick={() => {
             reset();
-            closeDialog();
+            closeDialog("hamburger");
           }}
         >
           <MdRestartAlt /> Start på nytt
@@ -79,8 +77,8 @@ export const HamburgerMenu = () => {
         <button
           className={classes.action}
           onClick={() => {
-            alert(id);
-            closeDialog();
+            console.log(`share`);
+            showDialog("share");
           }}
         >
           <MdLink /> Del puslespill
@@ -94,7 +92,7 @@ export const HamburgerMenu = () => {
           className={classes.action}
           onClick={() => {
             solve();
-            closeDialog();
+            closeDialog("hamburger");
           }}
         >
           <MdDoneAll /> Vis den beste løsningen
@@ -110,7 +108,7 @@ export const HamburgerMenu = () => {
         <button className={classes.action}>
           <MdOutlineSettings /> Instillinger
         </button>
-        <button className={classes.action}>
+        <button className={classes.action} onClick={() => showDialog("about")}>
           <MdInfoOutline /> Om Ordlabyrint
         </button>
       </dialog>

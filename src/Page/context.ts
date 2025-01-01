@@ -20,7 +20,7 @@ export const PageContext = createContext<
       hamburgerContainer: Element | DocumentFragment | null;
       dialog: DialogKind;
       showDialog: (which: DialogKind) => void;
-      closeDialog: () => void;
+      closeDialog: (which: DialogKind) => void;
     }
   | undefined
 >(undefined);

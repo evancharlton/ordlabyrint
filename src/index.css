@@ -14,7 +14,7 @@
 
   --path-color: rgb(136, 4, 244);
   --solution-color: rgb(22, 173, 68);
-  --button-color: #000;
+  --button-color: #fff;
 }
 
 a {
@@ -64,10 +64,16 @@ button:disabled {
   color: rgba(from var(--button-color) r g b / 0.2);
 }
 
+dialog[open]::backdrop {
+  backdrop-filter: blur(10px);
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
+
+    --button-color: #213547;
   }
   a:hover {
     color: #747bff;

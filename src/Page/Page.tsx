@@ -1,17 +1,11 @@
-import {
-  ContextType,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { ContextType, ReactNode, useCallback, useState } from "react";
 import { MdHelpOutline } from "react-icons/md";
 import { Link, Outlet, useParams } from "react-router";
 import classes from "./Page.module.css";
 import { DialogKind, PageContext, usePageContext } from "./context";
 import { createPortal } from "react-dom";
 import { RulesDialog } from "./RulesDialog";
+import { Modal } from "./Modal";
 
 export const Page = () => {
   const { lang } = useParams();
@@ -42,11 +36,19 @@ export const Page = () => {
             hamburgerContainer: buttons,
             dialog,
             showDialog: setDialog,
-            closeDialog: useCallback(() => setDialog(undefined), []),
+            closeDialog: useCallback(
+              (which: DialogKind) =>
+                setDialog((v) => (v === which ? undefined : v)),
+              []
+            ),
           }}
         >
+          <code>{dialog}</code>
           <Outlet />
           <RulesDialog />
+          <Modal title="Ordlabyrint" kind="about">
+            <h1>About Ordlabyrint</h1>
+          </Modal>
         </PageContext.Provider>
       </div>
     </div>

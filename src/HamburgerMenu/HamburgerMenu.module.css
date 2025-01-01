@@ -8,10 +8,6 @@
   display: none;
 }
 
-.hamburger[open]::backdrop {
-  backdrop-filter: blur(10px);
-}
-
 .hamburger[open] {
   border-radius: unset;
   border: 0;

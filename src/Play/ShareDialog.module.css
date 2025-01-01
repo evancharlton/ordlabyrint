@@ -1,0 +1,27 @@
+.dialog {
+  .buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+    border-top: 1px solid #9996;
+    padding-top: 8px;
+
+    button {
+      text-transform: uppercase;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 1ch;
+    }
+  }
+
+  code {
+    margin: 8px;
+    text-align: center;
+    flex: 1;
+    display: block;
+
+    overflow-x: auto;
+  }
+}
