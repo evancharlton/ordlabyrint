@@ -1,9 +1,23 @@
-.sequence > span::before {
-  content: "-";
-  margin-left: 4px;
-  margin-right: 4px;
+.container {
+  margin: 8px 0px;
 }
 
-.sequence > span:first-child::before {
-  display: none;
+.sequence {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 1.2em;
+
+  & > hr {
+    width: 4px;
+    display: inline;
+  }
+
+  & > a:first-child::before {
+    display: none;
+    filter: saturate(0);
+  }
 }

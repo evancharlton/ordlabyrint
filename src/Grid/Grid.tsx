@@ -148,14 +148,17 @@ export const Grid = () => {
   }, [addWord, backspace, toggleDirection]);
 
   return (
-    <div
-      className={classes.container}
-      style={{
-        gridTemplateColumns: `repeat(${width}, 1fr)`,
-        gridTemplateRows: `repeat(${height}, 1fr)`,
-      }}
-    >
-      {grid}
+    <div className={classes.container}>
+      <div
+        className={classes.grid}
+        style={{
+          gridTemplateColumns: `repeat(${width}, 1fr)`,
+          gridTemplateRows: `repeat(${height}, 1fr)`,
+        }}
+      >
+        {grid}
+      </div>
+      {solved ? <div className={classes.solved}>🎉</div> : null}
     </div>
   );
 };

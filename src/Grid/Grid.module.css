@@ -1,17 +1,37 @@
 .container {
-  display: grid;
-  gap: 4px;
-}
+  position: relative;
 
-.letter {
-  border: 4px solid transparent;
-  --intensity: 0;
-}
+  .grid {
+    display: grid;
+    gap: 4px;
+  }
 
-.solution {
-  background-color: rgba(from var(--solution-color) r g b / var(--intensity));
-}
+  .letter {
+    border: 4px solid transparent;
+    --intensity: 0;
+  }
 
-.building {
-  border-color: rgba(from var(--path-color) r g b / var(--intensity));
+  .solution {
+    background-color: rgba(from var(--solution-color) r g b / var(--intensity));
+  }
+
+  .building {
+    border-color: rgba(from var(--path-color) r g b / var(--intensity));
+  }
+
+  .solved {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 5em;
+
+    backdrop-filter: blur(8px);
+  }
 }
