@@ -37,7 +37,7 @@ export default defineConfig({
         cacheId: "ordlabyrint",
         runtimeCaching: [
           {
-            urlPattern: ({ url }) => url.pathname.endsWith(".json"),
+            urlPattern: /(?:\.json|\bletters)$/,
             handler: "NetworkFirst",
           },
         ],

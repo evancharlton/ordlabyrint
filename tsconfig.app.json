@@ -21,7 +21,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-    "types": ["vite-plugin-pwa/client", "jest"]
+    "types": ["vite-plugin-pwa/client"]
   },
   "include": ["src"]
 }
