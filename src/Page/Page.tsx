@@ -8,6 +8,7 @@ import { RulesDialog } from "./RulesDialog";
 import { usePwa } from "../PwaContainer";
 import { SettingsDialog, SettingsProvider } from "../SettingsProvider";
 import { AboutDialog } from "./AboutDialog";
+import logo from "../logo.svg";
 
 export const Page = () => {
   const { lang } = useParams();
@@ -22,7 +23,7 @@ export const Page = () => {
         <div className={classes.header}>
           <h1>
             <Link to={`/${lang || ""}`}>
-              <img src="/ordlabyrint.svg" />
+              <img src={logo} />
               Ordlabyrint
             </Link>
           </h1>
