@@ -17,7 +17,6 @@ export type DialogKind =
 
 export const PageContext = createContext<
   | {
-      hamburgerContainer: Element | DocumentFragment | null;
       dialog: DialogKind;
       showDialog: (which: DialogKind) => void;
       closeDialog: (which: DialogKind) => void;

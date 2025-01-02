@@ -12,10 +12,12 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --path-color: #8804f4;
   --theme-color: #8804f4;
+  --path-color: var(--theme-color);
   --solution-color: rgb(22, 173, 68);
   --button-color: #fff;
+
+  --header-button-color: #fff;
 }
 
 a {

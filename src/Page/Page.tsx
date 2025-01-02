@@ -1,47 +1,29 @@
-import { ContextType, ReactNode, useCallback, useState } from "react";
+import { ContextType, useCallback, useState } from "react";
 import { MdHelpOutline } from "react-icons/md";
-import { Link, Outlet, useParams } from "react-router";
+import { Outlet } from "react-router";
 import classes from "./Page.module.css";
-import { DialogKind, PageContext, usePageContext } from "./context";
-import { createPortal } from "react-dom";
+import { DialogKind, PageContext } from "./context";
 import { RulesDialog } from "./RulesDialog";
 import { SettingsDialog, SettingsProvider } from "../SettingsProvider";
 import { AboutDialog } from "./AboutDialog";
+import { Header } from "../spa-components/Header";
 import logo from "../logo.svg";
-import { UpdateButton } from "../spa-components/PwaContainer/UpdateButton";
 
 export const Page = () => {
-  const { lang } = useParams();
-  const [buttons, setButtons] = useState<HTMLDivElement | null>(null);
   const [dialog, setDialog] =
     useState<NonNullable<ContextType<typeof PageContext>>["dialog"]>(undefined);
 
   return (
     <SettingsProvider>
       <div className={classes.page}>
-        <div className={classes.header}>
-          <h1>
-            <Link to={`/${lang || ""}`}>
-              <img src={logo} />
-              Ordlabyrint
-            </Link>
-          </h1>
-          <div
-            className={classes.buttons}
-            ref={(ref) => {
-              setButtons(ref);
-            }}
-          >
-            <UpdateButton />
-            <button onClick={() => setDialog("rules")}>
-              <MdHelpOutline />
-            </button>
-          </div>
-        </div>
+        <Header className={classes.header} logo={logo} title="Ordlabyrint">
+          <button onClick={() => setDialog("rules")}>
+            <MdHelpOutline />
+          </button>
+        </Header>
         <div className={classes.content}>
           <PageContext.Provider
             value={{
-              hamburgerContainer: buttons,
               dialog,
               showDialog: setDialog,
               closeDialog: useCallback(
@@ -62,10 +44,4 @@ export const Page = () => {
   );
 };
 
-export const ButtonsPortal = ({ children }: { children: ReactNode }) => {
-  const { hamburgerContainer } = usePageContext();
-  if (!hamburgerContainer) {
-    return null;
-  }
-  return createPortal(children, hamburgerContainer);
-};
+export { ButtonsPortal } from "../spa-components/Header/Header";
