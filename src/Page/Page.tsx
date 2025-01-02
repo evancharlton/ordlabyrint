@@ -1,14 +1,14 @@
 import { ContextType, ReactNode, useCallback, useState } from "react";
-import { MdHelpOutline, MdOutlineRefresh } from "react-icons/md";
+import { MdHelpOutline } from "react-icons/md";
 import { Link, Outlet, useParams } from "react-router";
 import classes from "./Page.module.css";
 import { DialogKind, PageContext, usePageContext } from "./context";
 import { createPortal } from "react-dom";
 import { RulesDialog } from "./RulesDialog";
-import { usePwa } from "../PwaContainer";
 import { SettingsDialog, SettingsProvider } from "../SettingsProvider";
 import { AboutDialog } from "./AboutDialog";
 import logo from "../logo.svg";
+import { UpdateButton } from "../spa-components/PwaContainer/UpdateButton";
 
 export const Page = () => {
   const { lang } = useParams();
@@ -16,7 +16,6 @@ export const Page = () => {
   const [dialog, setDialog] =
     useState<NonNullable<ContextType<typeof PageContext>>["dialog"]>(undefined);
 
-  const { updateNeeded, performUpdate } = usePwa();
   return (
     <SettingsProvider>
       <div className={classes.page}>
@@ -33,15 +32,7 @@ export const Page = () => {
               setButtons(ref);
             }}
           >
-            {updateNeeded ? (
-              <button
-                title="oppdater appen"
-                onClick={() => performUpdate()}
-                className={classes.refresh}
-              >
-                <MdOutlineRefresh />
-              </button>
-            ) : null}
+            <UpdateButton />
             <button onClick={() => setDialog("rules")}>
               <MdHelpOutline />
             </button>

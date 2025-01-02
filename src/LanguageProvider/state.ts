@@ -1,5 +1,5 @@
 import { Reducer } from "react";
-import { neverGuard } from "../neverGuard";
+import { neverGuard } from "../spa-components/neverGuard";
 import { construct, Letters, Trie } from "../trie";
 
 export type State = {

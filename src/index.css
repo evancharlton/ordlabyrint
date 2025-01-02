@@ -13,6 +13,7 @@
   -moz-osx-font-smoothing: grayscale;
 
   --path-color: #8804f4;
+  --theme-color: #8804f4;
   --solution-color: rgb(22, 173, 68);
   --button-color: #fff;
 }

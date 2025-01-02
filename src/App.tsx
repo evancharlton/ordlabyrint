@@ -3,10 +3,10 @@ import "./App.css";
 import LanguageProvider from "./LanguageProvider";
 import GridSizeProvider from "./GridSizeProvider";
 import Play from "./Play";
-import LanguageSelector from "./LanguageSelector";
+import LanguageSelector from "./spa-components/LanguageSelector";
 import { SizeChooser } from "./SizeChooser";
 import Page from "./Page";
-import PwaContainer from "./PwaContainer";
+import PwaContainer from "./spa-components/PwaContainer";
 
 const App = () => {
   return (

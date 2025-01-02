@@ -75,22 +75,6 @@
   }
 }
 
-.refresh {
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(from var(--path-color) r g b / 1);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(from var(--path-color) r g b / 0);
-  }
-  100% {
-    box-shadow: 0 0 0 50px rgba(from var(--path-color) r g b / 0);
-  }
-}
-
 .page .content {
   flex: 1;
   width: 100%;

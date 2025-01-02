@@ -3,7 +3,7 @@ import { Outlet, useParams } from "react-router";
 import { LanguageContext } from "./context";
 import { reducer, State } from "./state";
 import { Letters } from "../trie";
-import { Loader } from "../Loader";
+import { Loader } from "../spa-components/Loader";
 
 export const LanguageProvider = () => {
   const { lang } = useParams();

@@ -1,6 +1,6 @@
 import { Reducer } from "react";
 import { CellId } from "../GridProvider";
-import { neverGuard } from "../neverGuard";
+import { neverGuard } from "../spa-components/neverGuard";
 import { Letter, Letters, Trie } from "../trie";
 import { Direction } from "./types";
 
