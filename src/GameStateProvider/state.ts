@@ -12,6 +12,7 @@ export type State = {
   revealed: boolean;
   solved: boolean;
 
+  ends: Record<CellId, true>;
   node: Trie | undefined;
   root: Trie;
   grid: Record<CellId, Letter>;
@@ -45,7 +46,7 @@ const DELTAS = {
 } as const;
 
 const checkSolved = (state: State): State => {
-  const { height, path, width, words } = state;
+  const { ends, height, path, width, words } = state;
   if (words.length === 0) {
     return state;
   }
@@ -54,34 +55,11 @@ const checkSolved = (state: State): State => {
     return state;
   }
 
-  const [start] = path;
-  const [startX, startY] = start.split(",").map((v) => +v);
-  const [endX, endY] = [
-    startX === 0 ? width - 1 : 0,
-    startY === 0 ? height - 1 : 0,
-  ];
-
-  const corner =
-    start === `0,0` ||
-    start == `0,${height - 1}` ||
-    start === `${width - 1},0` ||
-    start === `${width - 1},${height - 1}`;
-
-  const opposite = (id: CellId) => {
-    const [x, y] = id.split(",").map((v) => +v);
-    if (corner) {
-      return x === endX && y === endY;
-    }
-    return x === endX || y === endY;
-  };
-
-  if (!path.find(opposite)) {
+  const opp = path.find((id) => !!ends[id]);
+  if (!opp) {
     return state;
   }
-
-  return reducer(state, {
-    action: "set-solved",
-  });
+  return reducer(state, { action: "set-solved" });
 };
 
 export const reducer: Reducer<State, Update> = (state, update): State => {
@@ -97,6 +75,7 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
         error: undefined,
         node: root,
         solved: false,
+        ends: {},
       };
     }
 
@@ -151,6 +130,8 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
         root,
         solved,
         words: oldWords,
+        width,
+        height,
       } = state;
 
       if (!grid[id]) {
@@ -159,6 +140,72 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
 
       if (revealed || solved) {
         return state;
+      }
+
+      if (path.length === 0) {
+        // Start the path!
+        const letter = grid[id];
+
+        const ends = (() => {
+          const w = width - 1;
+          const h = height - 1;
+
+          if (id === "0,0") {
+            return { [`${w},${h}`]: true };
+          }
+
+          if (id === `0,${w}`) {
+            return { [`${h},0`]: true };
+          }
+
+          if (id === `${h},0`) {
+            return { [`0,${w}`]: true };
+          }
+
+          if (id === `${w},${h}`) {
+            return { [`0,0`]: true };
+          }
+
+          const [x, y] = id.split(",").map((v) => +v);
+          if (x === 0) {
+            // Left edge
+            return new Array(h - 1)
+              .fill(0)
+              .reduce((acc, _, i) => ({ ...acc, [`${w},${i + 1}`]: true }), {});
+          }
+
+          if (x === w) {
+            // Right edge
+            return new Array(h - 1)
+              .fill(0)
+              .reduce((acc, _, i) => ({ ...acc, [`0,${i + 1}`]: true }), {});
+          }
+
+          if (y === 0) {
+            // Top edge
+            return new Array(w - 1)
+              .fill(0)
+              .reduce((acc, _, i) => ({ ...acc, [`${i + 1},${h}`]: true }), {});
+          }
+
+          if (y === h) {
+            // Bottom edge
+            return new Array(w - 1)
+              .fill(0)
+              .reduce((acc, _, i) => ({ ...acc, [`${i + 1},0`]: true }), {});
+          }
+
+          throw new Error("Impossible situation");
+        })();
+
+        return {
+          ...state,
+          path: [id],
+          current: letter as Letters,
+          node: root[letter],
+          error: undefined,
+          ends,
+        };
       }
 
       const index = path.indexOf(id);
@@ -182,10 +229,11 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
           words: [],
           error: undefined,
           node: root,
+          ends: {},
         };
       }
 
-      // The user is toggling a previous node. We want to prune everything
+      // The user is switching off a previous node. We want to prune everything
       // after this (and the node itself).
       const newPath = path.slice(0, index + 1);
 

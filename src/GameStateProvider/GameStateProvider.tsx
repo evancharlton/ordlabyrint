@@ -13,7 +13,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
   const { letters } = useGrid();
   const { width, height } = useGridSize();
   const { trie } = useWords();
-  const [{ path, current, words, error, solved }, dispatch] = useReducer(
+  const [{ path, current, words, error, solved, ends }, dispatch] = useReducer(
     reducer,
     {
       path: [],
@@ -27,6 +27,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
       solved: false,
       width,
       height,
+      ends: {},
     } satisfies State
   );
 
@@ -118,6 +119,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
         toggleDirection,
         toggleLetter,
         words,
+        ends,
       }}
     >
       {children}

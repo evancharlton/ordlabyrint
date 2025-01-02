@@ -46,4 +46,9 @@
 
     backdrop-filter: blur(8px);
   }
+
+  .goal {
+    border-color: rgba(from var(--path-color) r g b / 0.5);
+    border-style: dashed;
+  }
 }

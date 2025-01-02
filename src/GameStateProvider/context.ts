@@ -9,6 +9,7 @@ export const GameStateContext = createContext<
       allowedIds: Record<CellId, true>;
       current: Letters;
       error: string | undefined;
+      ends: Record<CellId, true>;
       path: CellId[];
       reset: () => void;
       solved: boolean;

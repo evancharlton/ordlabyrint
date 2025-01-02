@@ -52,6 +52,7 @@ export const Grid = () => {
     allowedIds,
     backspace,
     current,
+    ends,
     path,
     solved,
     toggleDirection,
@@ -100,6 +101,7 @@ export const Grid = () => {
               classes.letter,
               key in solutionPercents ? classes.solution : undefined,
               key in pathPercents ? classes.building : undefined,
+              key in ends ? classes.goal : undefined,
             ]
               .filter(Boolean)
               .join(" ")}
@@ -116,6 +118,7 @@ export const Grid = () => {
     return grid;
   }, [
     allowedIds,
+    ends,
     height,
     letters,
     pathPercents,
