@@ -4,6 +4,18 @@
   .grid {
     display: grid;
     gap: 4px;
+
+    button {
+      aspect-ratio: 1 / 1;
+      width: 40px;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-transform: uppercase;
+      font-size: 1.2em;
+    }
   }
 
   .letter {

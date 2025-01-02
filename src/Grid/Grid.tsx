@@ -59,6 +59,12 @@ export const Grid = () => {
     words,
   } = useGamePlay();
 
+  const last = path[path.length - 1];
+
+  useEffect(() => {
+    document.getElementById(`cell-${last}`)?.focus();
+  }, [last]);
+
   const { state, words: solutionWords, path: solutionPath } = useSolution();
 
   const solutionPercents = useMemo(
@@ -79,6 +85,7 @@ export const Grid = () => {
         grid.push(
           <button
             key={key}
+            id={`cell-${key}`}
             disabled={
               solved ||
               state === "solved" ||
