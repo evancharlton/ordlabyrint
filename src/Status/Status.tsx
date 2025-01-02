@@ -1,6 +1,8 @@
+import { MdOutlineOpenInNew } from "react-icons/md";
 import { useGamePlay } from "../GameStateProvider";
 import { useSolution } from "../SolutionProvider";
 import classes from "./Status.module.css";
+import { Fragment } from "react/jsx-runtime";
 
 const NaobLink = ({
   children: word,
@@ -17,6 +19,7 @@ const NaobLink = ({
       className={className}
     >
       {word}
+      <MdOutlineOpenInNew />
     </a>
   );
 };
@@ -33,12 +36,10 @@ export const Status = () => {
       {showCurrent ? (
         <div className={[classes.sequence, classes.playWrapper].join(" ")}>
           {words.map((word, i) => (
-            <>
+            <Fragment key={`${i}/${word}`}>
               {i > 0 ? <hr /> : null}
-              <NaobLink key={`${i}/${word}`} className={classes.foundWord}>
-                {word}
-              </NaobLink>
-            </>
+              <NaobLink className={classes.foundWord}>{word}</NaobLink>
+            </Fragment>
           ))}
           {current ? (
             <>

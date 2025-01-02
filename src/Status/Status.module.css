@@ -1,5 +1,6 @@
 .container {
   margin: 8px 0px;
+  width: 90%;
 }
 
 .sequence {
@@ -9,6 +10,8 @@
   align-items: center;
   gap: 8px;
 
+  text-transform: uppercase;
+  letter-spacing: 1.1px;
   font-size: 1.2em;
 
   & > hr {
@@ -19,5 +22,11 @@
   & > a:first-child::before {
     display: none;
     filter: saturate(0);
+  }
+
+  a > svg {
+    color: #999a;
+    font-size: 0.8em;
+    margin-left: 2px;
   }
 }
