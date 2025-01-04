@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 
 export const GridSizeContext = createContext<
-  { width: number; height: number } | undefined
+  { width: number; height: number; key: string } | undefined
 >(undefined);
 
 export const useGridSize = () => {

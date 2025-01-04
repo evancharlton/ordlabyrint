@@ -15,10 +15,16 @@ export const GridSizeProvider = () => {
   }
 
   const value = useMemo(() => {
-    const [_, width, height] = size?.match(SIZE) ?? [];
+    const [_, w, h] = size?.match(SIZE) ?? [];
+
+    const width = Math.max(Math.min(Math.floor(+w), MAX_SIZE), MIN_SIZE);
+    const height = Math.max(Math.min(Math.floor(+h), MAX_SIZE), MIN_SIZE);
+    const key = `${width}x${height}`;
+
     return {
-      width: Math.max(Math.min(Math.floor(+width), MAX_SIZE), MIN_SIZE),
-      height: Math.max(Math.min(Math.floor(+height), MAX_SIZE), MIN_SIZE),
+      width,
+      height,
+      key,
     };
   }, [size]);
 

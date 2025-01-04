@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import {
   MdDoneAll,
   MdInfoOutline,
@@ -17,18 +17,8 @@ import { HamburgerMenu as SpaHamburgerMenu } from "../spa-components/HamburgerMe
 import { Action } from "../spa-components/HamburgerMenu";
 import { ShareDialog } from "../spa-components/ShareDialog";
 import { useBoardId } from "../BoardIdProvider";
-
-const PreviousSolution = ({ words }: Solution) => {
-  return (
-    <div className={classes.previousSolution}>
-      {words.map((word) => (
-        <span key={word} className={classes.word}>
-          {word}
-        </span>
-      ))}
-    </div>
-  );
-};
+import { ShareButton } from "../spa-components/ShareButton";
+import { NaobLink } from "../spa-components/NaobLink";
 
 const useCurrentUrl = () => {
   const { id } = useBoardId();
@@ -43,7 +33,6 @@ export const HamburgerMenu = () => {
   const { dialog, closeDialog, showDialog } = usePageContext();
 
   const { reset } = useGamePlay();
-  const { previousSolutions } = useHistory();
   const { solve } = useSolution();
   const { lang, size } = useParams();
   const navigate = useNavigate();
@@ -85,11 +74,7 @@ export const HamburgerMenu = () => {
         open={dialog === "share"}
         onClose={() => closeDialog("share")}
       />
-      <div className={classes.history}>
-        {previousSolutions.map((solution) => (
-          <PreviousSolution key={solution.timestamp} {...solution} />
-        ))}
-      </div>
+      <GameHistory />
       <Action
         icon={MdDoneAll}
         text="Vis den best løsningen"
@@ -117,5 +102,32 @@ export const HamburgerMenu = () => {
         onClick={() => showDialog("about")}
       />
     </SpaHamburgerMenu>
+  );
+};
+
+const GameHistory = () => {
+  const { previousSolutions } = useHistory();
+  return (
+    <div className={classes.history}>
+      {previousSolutions.map((solution) => (
+        <PreviousSolution key={solution.timestamp} {...solution} />
+      ))}
+    </div>
+  );
+};
+
+const PreviousSolution = ({ words }: Solution) => {
+  const url = useCurrentUrl();
+  const text = `Jeg har krysset labyrinten med ${words.length} ord!\n\n${url}`;
+  return (
+    <div className={classes.previousSolution}>
+      <ShareButton shareText={text}>{""}</ShareButton>
+      {words.map((word, i) => (
+        <Fragment key={`${i}/${word}`}>
+          {i > 0 ? <hr /> : null}
+          <NaobLink className={classes.word}>{word}</NaobLink>
+        </Fragment>
+      ))}
+    </div>
   );
 };

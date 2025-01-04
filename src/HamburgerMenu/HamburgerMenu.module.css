@@ -11,4 +11,25 @@
 .history {
   flex: 1;
   border-top: 1px solid #999a;
+  padding: 8px 0px;
+}
+
+.previousSolution {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  align-items: center;
+  flex-wrap: wrap;
+
+  button {
+    background-color: transparent;
+    border: 0;
+    border-radius: 0;
+    font-size: 24px;
+    padding: 12px;
+  }
+
+  .word {
+    font-size: 1.5em;
+  }
 }
