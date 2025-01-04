@@ -1,4 +1,4 @@
-import { Modal } from "../Page/Modal";
+import { Modal } from "../Page";
 import { useBoardId } from "../BoardIdProvider";
 import { useHref, useParams } from "react-router";
 import classes from "./ShareDialog.module.css";

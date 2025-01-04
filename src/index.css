@@ -76,29 +76,3 @@ button:disabled {
     background-color: #f9f9f9;
   }
 }
-
-dialog[open]::backdrop {
-  animation: blurin 0.1s ease-in forwards;
-}
-
-dialog[open] {
-  animation: fadein 0.1s ease-in forwards;
-}
-
-@keyframes fadein {
-  0% {
-    opacity: 0%;
-  }
-  100% {
-    opacity: 100%;
-  }
-}
-
-@keyframes blurin {
-  0% {
-    backdrop-filter: blur(0px);
-  }
-  100% {
-    backdrop-filter: blur(10px);
-  }
-}

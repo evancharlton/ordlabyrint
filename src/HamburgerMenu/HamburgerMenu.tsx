@@ -1,10 +1,8 @@
 import { useEffect, useRef } from "react";
 import {
-  MdClose,
   MdDoneAll,
   MdInfoOutline,
   MdLink,
-  MdMenu,
   MdOutlineAutorenew,
   MdOutlineSettings,
   MdRestartAlt,
@@ -15,7 +13,8 @@ import { Solution, useHistory } from "../HistoryProvider";
 import { useGamePlay } from "../GameStateProvider";
 import { useSolution } from "../SolutionProvider";
 import { useNavigate, useParams } from "react-router";
-import { ButtonsPortal } from "../Page";
+import { HamburgerMenu as SpaHamburgerMenu } from "../spa-components/HamburgerMenu/HamburgerMenu";
+import { Action } from "../spa-components/HamburgerMenu";
 
 const PreviousSolution = ({ words }: Solution) => {
   return (
@@ -49,72 +48,57 @@ export const HamburgerMenu = () => {
   }, [dialog]);
 
   return (
-    <>
-      <ButtonsPortal>
-        <button onClick={() => showDialog("hamburger")}>
-          <MdMenu />
-        </button>
-      </ButtonsPortal>
-      <dialog
-        className={classes.hamburger}
-        ref={dialogRef}
-        onClose={() => closeDialog("hamburger")}
-      >
-        <div className={classes.header}>
-          <button onClick={() => closeDialog("hamburger")}>
-            <MdClose />
-          </button>
-        </div>
-        <button
-          className={classes.action}
-          onClick={() => {
-            reset();
-            closeDialog("hamburger");
-          }}
-        >
-          <MdRestartAlt /> Start på nytt
-        </button>
-        <button
-          className={classes.action}
-          onClick={() => {
-            showDialog("share");
-          }}
-        >
-          <MdLink /> Del puslespill
-        </button>
-        <div className={classes.history}>
-          {previousSolutions.map((solution) => (
-            <PreviousSolution key={solution.timestamp} {...solution} />
-          ))}
-        </div>
-        <button
-          className={classes.action}
-          onClick={() => {
-            solve();
-            closeDialog("hamburger");
-          }}
-        >
-          <MdDoneAll /> Vis den beste løsningen
-        </button>
-        <button
-          className={classes.action}
-          onClick={() => {
-            navigate(`/${lang}/${size}/${Date.now()}`);
-            closeDialog("hamburger");
-          }}
-        >
-          <MdOutlineAutorenew /> Nytt puslespill
-        </button>
-        <button
-          className={classes.action}
-          onClick={() => showDialog("settings")}
-        >
-          <MdOutlineSettings /> Instillinger
-        </button>
-        <button className={classes.action} onClick={() => showDialog("about")}>
-          <MdInfoOutline /> Om Ordlabyrint
-        </button>
-      </dialog>
-    </>
+    <SpaHamburgerMenu
+      open={dialog === "hamburger"}
+      onClose={() => closeDialog("hamburger")}
+      onOpen={() => showDialog("hamburger")}
+    >
+      <Action
+        icon={MdRestartAlt}
+        text="Start på nytt"
+        onClick={() => {
+          reset();
+          closeDialog("hamburger");
+        }}
+      />
+      <Action
+        icon={MdLink}
+        text="Del puslespill"
+        onClick={() => {
+          showDialog("share");
+        }}
+      />
+      <div className={classes.history}>
+        {previousSolutions.map((solution) => (
+          <PreviousSolution key={solution.timestamp} {...solution} />
+        ))}
+      </div>
+      <Action
+        icon={MdDoneAll}
+        text="Vis den best løsningen"
+        onClick={() => {
+          solve();
+          closeDialog("hamburger");
+        }}
+      />
+      <Action
+        icon={MdOutlineAutorenew}
+        text="Nytt puslespill"
+        onClick={() => {
+          navigate(`/${lang}/${size}/${Date.now()}`);
+          closeDialog("hamburger");
+        }}
+      />
+      <Action
+        icon={MdOutlineSettings}
+        text="Instillinger"
+        onClick={() => showDialog("settings")}
+      />
+      <Action
+        icon={MdInfoOutline}
+        text="Om Ordlabyrint"
+        onClick={() => showDialog("about")}
+      />
+    </SpaHamburgerMenu>
   );
 };
