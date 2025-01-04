@@ -77,7 +77,7 @@ export const HamburgerMenu = () => {
       <GameHistory />
       <Action
         icon={MdDoneAll}
-        text="Vis den best løsningen"
+        text="Vis den beste løsningen"
         onClick={() => {
           solve();
           closeDialog("hamburger");
