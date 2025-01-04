@@ -1,10 +1,4 @@
-import {
-  ReactNode,
-  TouchEventHandler,
-  useEffect,
-  useMemo,
-  useRef,
-} from "react";
+import { ReactNode, useEffect, useMemo, useRef } from "react";
 import { useGrid } from "../GridProvider";
 import { useGridSize } from "../GridSizeProvider";
 import { CellId } from "../GridProvider";
