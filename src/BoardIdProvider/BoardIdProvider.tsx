@@ -19,15 +19,18 @@ type Props = {
 };
 
 export const BoardIdProvider = ({ children, id: providedId }: Props) => {
-  const { id: urlId } = useParams();
+  const { lang, id: urlId } = useParams();
   const defaultId = useDateId();
   const id = providedId ?? urlId ?? defaultId;
   const hashedId = hash(id);
 
+  const { key } = useGridSize();
+  const fingerprint = `${lang}/${key}/${hashedId}`;
+
   return (
     <BoardIdContext.Provider
       key={id}
-      value={{ random: mulberry32(hashedId), id: hashedId }}
+      value={{ random: mulberry32(hashedId), id: hashedId, fingerprint }}
     >
       {children}
     </BoardIdContext.Provider>

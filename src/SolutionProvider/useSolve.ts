@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useWords } from "../LanguageProvider";
 import { useGridSize } from "../GridSizeProvider";
 import { CellId, useGrid } from "../GridProvider";
@@ -6,6 +6,8 @@ import { Trie } from "../trie";
 import { astar, type Keyable } from "../astar";
 import { SolverState } from "./context";
 import { Solution } from "../HistoryProvider";
+import { useBoardId } from "../BoardIdProvider";
+import { useStorageState } from "../useStorageState";
 
 type Step = Keyable & {
   x: number;
@@ -31,8 +33,23 @@ export const useSolve = () => {
   const { letters } = useGrid();
   const [state, setState] = useState<SolverState>("pending");
   const [progress, setProgress] = useState<number>(0);
-  const [solution, setSolution] = useState<Solution | undefined>();
   const abortController = useRef<AbortController | null>(null);
+
+  const { fingerprint } = useBoardId();
+  const [solution, setSolution] = useStorageState<Solution>(
+    `solutions/${fingerprint}`,
+    {
+      words: [],
+      path: [],
+      timestamp: 0,
+    }
+  );
+
+  useEffect(() => {
+    if (solution.words.length) {
+      setState("solved");
+    }
+  }, [solution.words.length]);
 
   const abort = useCallback(() => {
     abortController.current?.abort();
@@ -274,9 +291,9 @@ export const useSolve = () => {
       setSolution(solution);
       setState("solved");
     } else {
-      setSolution(undefined);
+      setSolution({ words: [], timestamp: Date.now(), path: [] });
       setState("unsolvable");
     }
-  }, [height, letters, root, width]);
+  }, [height, letters, root, setSolution, width]);
   return { abort, solve, state, progress, solution };
 };
