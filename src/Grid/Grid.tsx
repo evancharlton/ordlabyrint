@@ -104,6 +104,10 @@ export const Grid = () => {
               !allowedIds[key]
             }
             onClick={() => {
+              if (underTouch.current === key) {
+                return;
+              }
+
               toggleLetter(key);
             }}
             className={[
@@ -132,9 +136,15 @@ export const Grid = () => {
               dragging.current = false;
             }}
             onMouseOver={() => {
-              if (dragging.current) {
-                toggleLetter(key);
+              if (!dragging.current) {
+                return;
               }
+
+              if (underTouch.current === key) {
+                return;
+              }
+
+              toggleLetter(key);
             }}
           >
             {letters[key]}
