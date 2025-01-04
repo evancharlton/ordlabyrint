@@ -59,7 +59,6 @@
 
   .message {
     grid-area: stack;
-    width: min-content;
 
     justify-self: center;
     align-self: center;
