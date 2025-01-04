@@ -53,8 +53,10 @@ export const Grid = () => {
     addWord,
     allowedIds,
     backspace,
+    clearError,
     current,
     ends,
+    error,
     path,
     solved,
     toggleDirection,
@@ -178,6 +180,26 @@ export const Grid = () => {
 
   const gridRef = useRef<HTMLDivElement>(null);
 
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(0);
+  useEffect(() => {
+    const oldTimer = timeoutRef.current;
+    if (oldTimer) {
+      clearTimeout(oldTimer);
+    }
+
+    if (!error) {
+      return;
+    }
+
+    const newTimer = setTimeout(() => {
+      clearError();
+    }, 2000);
+    timeoutRef.current = newTimer;
+    return () => {
+      clearTimeout(newTimer);
+    };
+  }, [clearError, error]);
+
   return (
     <div className={classes.container}>
       <div
@@ -279,6 +301,11 @@ export const Grid = () => {
         {grid}
       </div>
       {solved ? <div className={classes.solved}>🎉</div> : null}
+      {error ? (
+        <div onClick={() => clearError()} className={classes.message}>
+          {error}
+        </div>
+      ) : null}
     </div>
   );
 };

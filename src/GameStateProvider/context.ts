@@ -7,6 +7,7 @@ export const GameStateContext = createContext<
   | {
       addWord: () => void;
       allowedIds: Record<CellId, true>;
+      clearError: () => void;
       current: Letters;
       error: string | undefined;
       ends: Record<CellId, true>;

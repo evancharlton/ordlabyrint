@@ -94,6 +94,10 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
     dispatch({ action: "backspace" });
   }, []);
 
+  const clearError = useCallback(() => {
+    dispatch({ action: "clear-error" });
+  }, []);
+
   const { add } = useHistory();
   useEffect(() => {
     if (solved) {
@@ -111,6 +115,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
         addWord,
         allowedIds,
         backspace,
+        clearError,
         current,
         error,
         path,

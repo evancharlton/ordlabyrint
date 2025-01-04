@@ -23,6 +23,7 @@ export type State = {
 type Update =
   | { action: "reset" }
   | { action: "set-revealed" }
+  | { action: "clear-error" }
   | { action: "set-solved" }
   | { action: "backspace" }
   | { action: "toggle-letter"; id: CellId }
@@ -288,10 +289,10 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
         };
       }
 
-      if (import.meta.env.PROD && !node?._) {
+      if (!node?._) {
         return {
           ...state,
-          error: "Not a word",
+          error: "Ukjent ord",
         };
       }
 
@@ -317,6 +318,13 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
       return {
         ...state,
         solved: true,
+      };
+    }
+
+    case "clear-error": {
+      return {
+        ...state,
+        error: undefined,
       };
     }
 

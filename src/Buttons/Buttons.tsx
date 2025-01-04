@@ -5,8 +5,7 @@ import { MdBackspace, MdKeyboardReturn, MdRestartAlt } from "react-icons/md";
 
 export const Buttons = () => {
   const { state } = useSolution();
-  const { backspace, reset, addWord, current, path, error, solved } =
-    useGamePlay();
+  const { backspace, reset, addWord, current, path, solved } = useGamePlay();
 
   return (
     <div className={classes.container}>
@@ -24,7 +23,6 @@ export const Buttons = () => {
           <MdKeyboardReturn />
         </button>
       </div>
-      <div className={classes.message}>{error}</div>
     </div>
   );
 };
