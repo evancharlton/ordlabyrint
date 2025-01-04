@@ -19,6 +19,7 @@
       font-size: 1.2em;
 
       background-color: transparent;
+      transition: border-color 0.25s;
     }
   }
 
