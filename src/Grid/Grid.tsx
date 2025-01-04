@@ -118,6 +118,12 @@ export const Grid = () => {
               [`--intensity`]:
                 solutionPercents[key] ?? pathPercents[key] ?? undefined,
             }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                addWord();
+              }
+            }}
             onMouseDown={() => {
               dragging.current = true;
               toggleLetter(key);
@@ -138,6 +144,7 @@ export const Grid = () => {
     }
     return grid;
   }, [
+    addWord,
     allowedIds,
     ends,
     height,

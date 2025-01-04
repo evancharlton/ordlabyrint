@@ -30,7 +30,20 @@ type Update =
   | { action: "toggle-direction"; direction: Direction }
   | { action: "add-word" };
 
-const walk = (grid: State["grid"], root: State["root"], ids: CellId[]) => {
+const walk = (
+  grid: State["grid"],
+  root: State["root"],
+  ids: CellId[] | string
+) => {
+  if (typeof ids === "string") {
+    let node: Trie | undefined = root;
+    for (let i = 0; i < ids.length; i += 1) {
+      const letter = ids[i] as Letter;
+      node = node?.[letter];
+    }
+    return node;
+  }
+
   let node: Trie | undefined = root;
   for (const id of ids) {
     const letter = grid[id];
@@ -243,6 +256,7 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
       let wordIndex = 0;
       let current = "";
       let consumed = 0;
+      let newNode: Trie | undefined = root;
 
       while (consumed < newPath.length) {
         const word = oldWords[wordIndex++];
@@ -250,7 +264,8 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
         if (!word) {
           // We're out of words - most likely, the user is trimming before any
           // words have been added.
-          current = (oldCurrent as string).substring(0, index + 1);
+          current = (oldCurrent as string).substring(0, remaining);
+          newNode = walk(grid, root, current);
           break;
         }
 
@@ -258,6 +273,7 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
           // The latest word is the one being trimmed - slice it off and into
           // the current field.
           current = word.substring(0, remaining);
+          newNode = walk(grid, root, current);
           break;
         }
 
@@ -269,7 +285,7 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
         ...state,
         path: newPath,
         current: current as Letters,
-        node: walk(grid, root, newPath),
+        node: newNode,
         error: undefined,
         words: newWords,
       };
