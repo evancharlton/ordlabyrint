@@ -218,6 +218,10 @@ export const Grid = () => {
   }, [clearError, error]);
 
   useEffect(() => {
+    if (state === "solved") {
+      return;
+    }
+
     const onTouchStart = (e: TouchEvent) => {
       // Don't even attempt to handle multi-touch .. but also, we don't
       // want to break pinch-to-zoom stuff.
