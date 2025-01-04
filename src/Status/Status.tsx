@@ -37,7 +37,6 @@ export const Status = () => {
         <div className={[classes.sequence, classes.playWrapper].join(" ")}>
           {words.map((word, i) => (
             <Fragment key={`${i}/${word}`}>
-              {i > 0 ? <hr /> : null}
               <NaobLink className={classes.foundWord}>{word}</NaobLink>
             </Fragment>
           ))}
@@ -56,9 +55,10 @@ export const Status = () => {
             className={[classes.sequence, classes.solutionWrapper].join(" ")}
           >
             {solutionWords.map((word, i) => (
-              <NaobLink key={`${i}/${word}`} className={classes.solutionWord}>
-                {word}
-              </NaobLink>
+              <Fragment key={`${i}/${word}`}>
+                {i > 0 ? <hr /> : null}
+                <NaobLink className={classes.solutionWord}>{word}</NaobLink>
+              </Fragment>
             ))}
           </div>
         </>
