@@ -21,6 +21,7 @@
   & > hr {
     width: 4px;
     display: inline;
+    margin: 0;
   }
 
   & > a:first-child::before {
