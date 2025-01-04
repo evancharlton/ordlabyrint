@@ -12,9 +12,11 @@ import classes from "./HamburgerMenu.module.css";
 import { Solution, useHistory } from "../HistoryProvider";
 import { useGamePlay } from "../GameStateProvider";
 import { useSolution } from "../SolutionProvider";
-import { useNavigate, useParams } from "react-router";
+import { useHref, useNavigate, useParams } from "react-router";
 import { HamburgerMenu as SpaHamburgerMenu } from "../spa-components/HamburgerMenu/HamburgerMenu";
 import { Action } from "../spa-components/HamburgerMenu";
+import { ShareDialog } from "../spa-components/ShareDialog";
+import { useBoardId } from "../BoardIdProvider";
 
 const PreviousSolution = ({ words }: Solution) => {
   return (
@@ -26,6 +28,15 @@ const PreviousSolution = ({ words }: Solution) => {
       ))}
     </div>
   );
+};
+
+const useCurrentUrl = () => {
+  const { id } = useBoardId();
+
+  const { lang, size } = useParams();
+  const href = useHref(`/${lang}/${size}/${id}`);
+
+  return [`${window.location.protocol}/`, window.location.host, href].join("/");
 };
 
 export const HamburgerMenu = () => {
@@ -67,6 +78,12 @@ export const HamburgerMenu = () => {
         onClick={() => {
           showDialog("share");
         }}
+      />
+      <ShareDialog
+        url={useCurrentUrl()}
+        shareText="Prøve å løse denne ordlabyrinten!"
+        open={dialog === "share"}
+        onClose={() => closeDialog("share")}
       />
       <div className={classes.history}>
         {previousSolutions.map((solution) => (

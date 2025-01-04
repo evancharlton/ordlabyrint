@@ -7,7 +7,6 @@ import HistoryProvider from "../HistoryProvider";
 import SolutionProvider from "../SolutionProvider";
 import Status from "../Status";
 import HamburgerMenu from "../HamburgerMenu";
-import { ShareDialog } from "./ShareDialog";
 
 export const Play = () => {
   return (
@@ -20,7 +19,6 @@ export const Play = () => {
               <Grid />
               <Buttons />
               <HamburgerMenu />
-              <ShareDialog />
             </GameStateProvider>
           </SolutionProvider>
         </HistoryProvider>
