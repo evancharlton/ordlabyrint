@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useMemo } from "react";
+import { ReactNode, useEffect, useMemo, useRef } from "react";
 import { useGrid } from "../GridProvider";
 import { useGridSize } from "../GridSizeProvider";
 import { CellId } from "../GridProvider";
@@ -33,6 +33,8 @@ const getPercents = (
 
   return percents;
 };
+
+const DEBUG = import.meta.env.DEV;
 
 const DIRECTIONS: Record<
   "ArrowLeft" | "ArrowRight" | "ArrowDown" | "ArrowUp",
@@ -77,6 +79,10 @@ export const Grid = () => {
     [current, path, words]
   );
 
+  const dragging = useRef<boolean>(false);
+  const underTouch = useRef<CellId | undefined>(undefined);
+  underTouch.current = last;
+
   const grid: ReactNode[] = useMemo(() => {
     const grid: ReactNode[] = [];
     for (let y = 0; y < height; y += 1) {
@@ -86,6 +92,7 @@ export const Grid = () => {
         grid.push(
           <button
             key={key}
+            data-key={key}
             id={`cell-${key}`}
             disabled={
               solved ||
@@ -108,6 +115,18 @@ export const Grid = () => {
             style={{
               [`--intensity`]:
                 solutionPercents[key] ?? pathPercents[key] ?? undefined,
+            }}
+            onMouseDown={() => {
+              dragging.current = true;
+              toggleLetter(key);
+            }}
+            onMouseUp={() => {
+              dragging.current = false;
+            }}
+            onMouseOver={() => {
+              if (dragging.current) {
+                toggleLetter(key);
+              }
             }}
           >
             {letters[key]}
@@ -157,13 +176,104 @@ export const Grid = () => {
     };
   }, [addWord, backspace, toggleDirection]);
 
+  const gridRef = useRef<HTMLDivElement>(null);
+
   return (
     <div className={classes.container}>
       <div
+        ref={gridRef}
         className={classes.grid}
         style={{
           gridTemplateColumns: `repeat(${width}, 1fr)`,
           gridTemplateRows: `repeat(${height}, 1fr)`,
+        }}
+        onMouseLeave={() => {
+          dragging.current = false;
+        }}
+        onTouchStart={(e) => {
+          // Don't even attempt to handle multi-touch .. but also, we don't
+          // want to break pinch-to-zoom stuff.
+          if (e.touches.length !== 1) {
+            return;
+          }
+
+          const touch = e.touches[0];
+          if (!touch) {
+            return;
+          }
+
+          const under = document.elementFromPoint(touch.pageX, touch.pageY);
+          if (!under) {
+            return;
+          }
+
+          if (under.hasAttribute("disabled")) {
+            if (DEBUG) console.log("Ignoring disabled option");
+            return;
+          }
+
+          const key = under.getAttribute("data-key") as CellId | undefined;
+          if (!key) {
+            return;
+          }
+
+          underTouch.current = key;
+          toggleLetter(key);
+        }}
+        onTouchMove={(e) => {
+          // Don't even attempt to handle multi-touch .. but also, we don't
+          // want to break pinch-to-zoom stuff.
+          if (e.touches.length !== 1) {
+            return;
+          }
+
+          const touch = e.touches[0];
+          if (!touch) {
+            if (DEBUG) console.log(`No touch event`);
+            return;
+          }
+
+          const previous = underTouch.current;
+          if (!previous) {
+            if (DEBUG) console.log(`No previous cell`);
+            return;
+          }
+
+          const under = document.elementFromPoint(touch.pageX, touch.pageY);
+          if (!under) {
+            if (DEBUG) console.log(`No element under touch`);
+            return;
+          }
+
+          if (under.hasAttribute("disabled")) {
+            if (DEBUG) console.log("Ignoring disabled option");
+            return;
+          }
+
+          const key = under.getAttribute("data-key") as CellId | undefined;
+          if (!key) {
+            if (DEBUG) console.log(`Element doesn't have a key`);
+            return;
+          }
+
+          if (previous === key) {
+            if (DEBUG) console.log(`Ignoring no-op for ${key}`);
+            return;
+          }
+
+          if (DEBUG) console.log(`Toggling ${key}`);
+          toggleLetter(key);
+          underTouch.current = key;
+        }}
+        onTouchEnd={(e) => {
+          // Don't even attempt to handle multi-touch .. but also, we don't
+          // want to break pinch-to-zoom stuff.
+          if (e.touches.length !== 1) {
+            return;
+          }
+
+          dragging.current = false;
+          underTouch.current = undefined;
         }}
       >
         {grid}
