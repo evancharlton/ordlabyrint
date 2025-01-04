@@ -23,9 +23,7 @@
     }
 
     .solution {
-      background-color: rgba(
-        from var(--solution-color) r g b / var(--intensity)
-      );
+      border-color: rgba(from var(--solution-color) r g b / var(--intensity));
     }
   }
 
