@@ -164,52 +164,24 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
           const w = width - 1;
           const h = height - 1;
 
-          if (id === "0,0") {
-            return { [`${w},${h}`]: true };
-          }
-
-          if (id === `0,${w}`) {
-            return { [`${h},0`]: true };
-          }
-
-          if (id === `${h},0`) {
-            return { [`0,${w}`]: true };
-          }
-
-          if (id === `${w},${h}`) {
-            return { [`0,0`]: true };
-          }
-
           const [x, y] = id.split(",").map((v) => +v);
-          if (x === 0) {
-            // Left edge
-            return new Array(h - 1)
-              .fill(0)
-              .reduce((acc, _, i) => ({ ...acc, [`${w},${i + 1}`]: true }), {});
+          const ends: CellId[] = [];
+
+          if (x === 0 || x === w) {
+            // Left or right edge
+            for (let y = 0; y < height; y += 1) {
+              ends.push(`${x === 0 ? w : 0},${y}`);
+            }
           }
 
-          if (x === w) {
-            // Right edge
-            return new Array(h - 1)
-              .fill(0)
-              .reduce((acc, _, i) => ({ ...acc, [`0,${i + 1}`]: true }), {});
+          if (y === 0 || y === h) {
+            // Top or bottom edge
+            for (let x = 0; x < width; x += 1) {
+              ends.push(`${x},${y === 0 ? h : 0}`);
+            }
           }
 
-          if (y === 0) {
-            // Top edge
-            return new Array(w - 1)
-              .fill(0)
-              .reduce((acc, _, i) => ({ ...acc, [`${i + 1},${h}`]: true }), {});
-          }
-
-          if (y === h) {
-            // Bottom edge
-            return new Array(w - 1)
-              .fill(0)
-              .reduce((acc, _, i) => ({ ...acc, [`${i + 1},0`]: true }), {});
-          }
-
-          throw new Error("Impossible situation");
+          return ends.reduce((acc, id) => ({ ...acc, [id]: true }), {});
         })();
 
         return {

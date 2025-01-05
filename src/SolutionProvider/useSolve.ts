@@ -70,42 +70,10 @@ export const useSolve = () => {
         const { x, y, key, node } = cell;
         switch (key) {
           case "root": {
-            const corner = (x: number, y: number): Step => {
-              const key: CellId = `${x},${y}`;
-              return {
-                key,
-                x: x,
-                y: y,
-                minX: x,
-                minY: y,
-                maxX: x,
-                maxY: y,
-                // TODO: I'm sure there's some math I can do to derive this
-                //       but my brain isn't that clever at the moment.
-                goalX: x === 0 ? width - 1 : 0,
-                goalY: y === 0 ? height - 1 : 0,
-                path: [key],
-                node: root[letters[key]]!,
-                words: [],
-                current: letters[key],
-              };
-            };
+            const starts: Step[] = [];
 
-            const starts: Step[] = [
-              // Top-left corner
-              corner(0, 0),
-
-              // Top-right corner
-              corner(width - 1, 0),
-
-              // Bottom-right corner
-              corner(width - 1, height - 1),
-
-              // Bottom-left corner
-              corner(0, height - 1),
-            ];
-
-            for (let y = 1; y < height - 1; y += 1) {
+            // Crossing from side-to-side
+            for (let y = 0; y < height; y += 1) {
               for (const x of [0, width - 1]) {
                 const key: CellId = `${x},${y}`;
                 starts.push({
@@ -127,7 +95,8 @@ export const useSolve = () => {
               }
             }
 
-            for (let x = 1; x < width - 1; x += 1) {
+            // Crossing up-and-down
+            for (let x = 0; x < width; x += 1) {
               for (const y of [0, height - 1]) {
                 const key: CellId = `${x},${y}`;
                 starts.push({

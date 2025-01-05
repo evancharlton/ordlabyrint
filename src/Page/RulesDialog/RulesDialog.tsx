@@ -6,10 +6,8 @@ export const RulesDialog = () => {
       <h3>Målet</h3>
       <p>
         Målet er å finne sekvenser av ord som starter på den ene kanten og
-        berører til slutt motsatt side.
-      </p>
-      <p>
-        Hvis sekvensen begynner i ett hjørne, må den berøre det motsatte hjørne.
+        berører til slutt motsatt side. (Det trenger ikke å ende på den andre
+        siden - bare røre ved siden.)
       </p>
       <p>Prøv å bruke så få ord som mulig!</p>
       <hr />
