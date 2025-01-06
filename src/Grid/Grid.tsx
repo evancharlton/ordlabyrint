@@ -135,12 +135,17 @@ export const Grid = () => {
             onMouseUp={() => {
               dragging.current = false;
             }}
-            onMouseOver={() => {
+            onMouseOver={(e) => {
               if (!dragging.current) {
                 return;
               }
 
               if (underTouch.current === key) {
+                return;
+              }
+
+              const target = e.target;
+              if ((target as Element)?.hasAttribute("disabled")) {
                 return;
               }
 
