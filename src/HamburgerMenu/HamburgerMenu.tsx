@@ -14,7 +14,7 @@ import { useGamePlay } from "../GameStateProvider";
 import { useSolution } from "../SolutionProvider";
 import { useHref, useNavigate, useParams } from "react-router";
 import { HamburgerMenu as SpaHamburgerMenu } from "../spa-components/HamburgerMenu/HamburgerMenu";
-import { Action } from "../spa-components/HamburgerMenu";
+import { Action, Content } from "../spa-components/HamburgerMenu";
 import { ShareDialog } from "../spa-components/ShareDialog";
 import { useBoardId } from "../BoardIdProvider";
 import { ShareButton } from "../spa-components/ShareButton";
@@ -75,7 +75,9 @@ export const HamburgerMenu = () => {
         open={dialog === "share"}
         onClose={() => closeDialog("share")}
       />
-      <GameHistory />
+      <Content className={classes.history}>
+        <GameHistory />
+      </Content>
       <Action
         icon={MdDoneAll}
         text="Vis den beste løsningen"
@@ -109,13 +111,9 @@ export const HamburgerMenu = () => {
 
 const GameHistory = () => {
   const { previousSolutions } = useHistory();
-  return (
-    <div className={classes.history}>
-      {previousSolutions.map((solution) => (
-        <PreviousSolution key={solution.timestamp} {...solution} />
-      ))}
-    </div>
-  );
+  return previousSolutions.map((solution) => (
+    <PreviousSolution key={solution.timestamp} {...solution} />
+  ));
 };
 
 const PreviousSolution = ({ words }: Solution) => {
