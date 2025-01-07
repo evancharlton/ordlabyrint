@@ -33,7 +33,7 @@ type Update =
 const walk = (
   grid: State["grid"],
   root: State["root"],
-  ids: CellId[] | string
+  ids: CellId[] | string,
 ) => {
   if (typeof ids === "string") {
     let node: Trie | undefined = root;

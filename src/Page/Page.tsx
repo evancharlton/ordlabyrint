@@ -29,7 +29,7 @@ export const Page = () => {
               closeDialog: useCallback(
                 (which: DialogKind) =>
                   setDialog((v) => (v === which ? undefined : v)),
-                []
+                [],
               ),
             }}
           >

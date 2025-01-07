@@ -9,7 +9,7 @@ import { Direction } from "../GameStateProvider/types";
 
 const getPercents = (
   words: string[],
-  path: CellId[]
+  path: CellId[],
 ): Record<CellId, number> => {
   const percents: Record<CellId, number> = {};
   let w = 0;
@@ -74,11 +74,11 @@ export const Grid = () => {
 
   const solutionPercents = useMemo(
     () => getPercents(solutionWords, solutionPath),
-    [solutionPath, solutionWords]
+    [solutionPath, solutionWords],
   );
   const pathPercents = useMemo(
     () => getPercents([...words, current as string], path),
-    [current, path, words]
+    [current, path, words],
   );
 
   const dragging = useRef<boolean>(false);
@@ -153,7 +153,7 @@ export const Grid = () => {
             }}
           >
             {letters[key]}
-          </button>
+          </button>,
         );
       }
     }

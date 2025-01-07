@@ -30,7 +30,7 @@ export const randomItem = <T>(
     [index: number]: T;
     length: number;
   },
-  random: PRNG
+  random: PRNG,
 ): T => {
   return items[Math.floor(random() * items.length)];
 };

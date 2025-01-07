@@ -32,11 +32,11 @@ const markDirty = () =>
 
 export const useStorageState = <TValue>(
   key: string,
-  defaultValue: NonNullable<TValue>
+  defaultValue: NonNullable<TValue>,
 ) => {
   const [data, setData] = useState<NonNullable<TValue>>(defaultValue);
   const [state, setState] = useState<"loading" | "loaded" | "updating">(
-    "loading"
+    "loading",
   );
 
   const load = useCallback(() => {
@@ -87,7 +87,7 @@ export const useStorageState = <TValue>(
         markDirty();
       });
     },
-    [data, key]
+    [data, key],
   );
 
   return [data, update, state] as const;

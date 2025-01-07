@@ -26,7 +26,7 @@ export const useGamePlay = () => {
   const context = useContext(GameStateContext);
   if (!context) {
     throw new Error(
-      "Must be rendered inside of <GameStateContext.Provider .. />!"
+      "Must be rendered inside of <GameStateContext.Provider .. />!",
     );
   }
   return context;

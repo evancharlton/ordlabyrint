@@ -28,7 +28,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
       width,
       height,
       ends: {},
-    } satisfies State
+    } satisfies State,
   );
 
   const { state } = useSolution();
@@ -69,8 +69,8 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
         (acc, id) => ({ ...acc, [id]: true }),
         path.reduce<Record<CellId, true>>(
           (acc, id) => ({ ...acc, [id]: true }),
-          {} as Record<CellId, true>
-        )
+          {} as Record<CellId, true>,
+        ),
       );
   }, [height, letters, path, width]);
 

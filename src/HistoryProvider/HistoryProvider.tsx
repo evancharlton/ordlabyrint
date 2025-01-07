@@ -14,7 +14,7 @@ export const HistoryProvider = ({ children }: { children: ReactNode }) => {
 
   const [previousSolutions, setPreviousSolutions] = useStorageState<Solution[]>(
     key,
-    []
+    [],
   );
 
   const add = useCallback(
@@ -24,7 +24,7 @@ export const HistoryProvider = ({ children }: { children: ReactNode }) => {
         const previous = prev.find(
           ({ path, words }) =>
             words.length === solution.words.length &&
-            path.join("-") === solution.path.join("-")
+            path.join("-") === solution.path.join("-"),
         );
         if (previous) {
           return prev;
@@ -32,7 +32,7 @@ export const HistoryProvider = ({ children }: { children: ReactNode }) => {
         return [...prev, solution];
       });
     },
-    [setPreviousSolutions]
+    [setPreviousSolutions],
   );
 
   return (

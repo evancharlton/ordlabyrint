@@ -25,7 +25,7 @@ export const LanguageProvider = () => {
     dispatch({ action: "start-loading" });
     fetch(
       `${import.meta.env.BASE_URL}/${lang}/words.json`.replace(/^\/\//, "/"),
-      { signal: abortController.signal }
+      { signal: abortController.signal },
     )
       .then((res) => {
         if (!res.ok) {

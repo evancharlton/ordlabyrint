@@ -33,7 +33,7 @@ export const astar = async <T extends Keyable>({
   const f = (node: T) => fScore.get(node.key) ?? Number.MAX_SAFE_INTEGER;
   fScore.set(
     start.key,
-    h(start, start, () => [])
+    h(start, start, () => []),
   );
 
   let i = 0;
@@ -65,7 +65,7 @@ export const astar = async <T extends Keyable>({
         fScore.set(
           neighbor.key,
           tentativeScore +
-            h(neighbor, current, (n) => getPath(cameFrom, current, n))
+            h(neighbor, current, (n) => getPath(cameFrom, current, n)),
         );
         queue.put(neighbor, f(neighbor));
       }

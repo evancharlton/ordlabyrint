@@ -42,7 +42,7 @@ export const useSolve = () => {
       words: [],
       path: [],
       timestamp: 0,
-    }
+    },
   );
 
   useEffect(() => {
