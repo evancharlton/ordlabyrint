@@ -10,7 +10,7 @@ import PwaContainer from "./spa-components/PwaContainer";
 
 const App = () => {
   return (
-    <PwaContainer>
+    <PwaContainer appId="ordlabyrint">
       <HashRouter>
         <Routes>
           <Route path="/" element={<Page />}>

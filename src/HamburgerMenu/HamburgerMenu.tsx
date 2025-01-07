@@ -19,6 +19,7 @@ import { ShareDialog } from "../spa-components/ShareDialog";
 import { useBoardId } from "../BoardIdProvider";
 import { ShareButton } from "../spa-components/ShareButton";
 import { NaobLink } from "../spa-components/NaobLink";
+import { OtherApps } from "../spa-components/HamburgerMenu/OtherApps";
 
 const useCurrentUrl = () => {
   const { id } = useBoardId();
@@ -101,6 +102,7 @@ export const HamburgerMenu = () => {
         text="Om Ordlabyrint"
         onClick={() => showDialog("about")}
       />
+      <OtherApps />
     </SpaHamburgerMenu>
   );
 };
