@@ -270,6 +270,10 @@ export const reducer: Reducer<State, Update> = (state, update): State => {
         return state;
       }
 
+      if (!current.length) {
+        return state;
+      }
+
       if (current.length < 3) {
         return {
           ...state,
