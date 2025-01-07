@@ -6,7 +6,7 @@ import classes from "./Grid.module.css";
 import { useGamePlay } from "../GameStateProvider";
 import { useSolution } from "../SolutionProvider";
 import { Direction } from "../GameStateProvider/types";
-import { Link, useHref, useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import { MdOutlineAutorenew } from "react-icons/md";
 
 const getPercents = (
