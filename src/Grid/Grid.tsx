@@ -6,6 +6,8 @@ import classes from "./Grid.module.css";
 import { useGamePlay } from "../GameStateProvider";
 import { useSolution } from "../SolutionProvider";
 import { Direction } from "../GameStateProvider/types";
+import { Link, useHref, useParams } from "react-router";
+import { MdOutlineAutorenew } from "react-icons/md";
 
 const getPercents = (
   words: string[],
@@ -315,7 +317,7 @@ export const Grid = () => {
       ref?.removeEventListener("touchstart", onTouchStart);
       ref?.removeEventListener("touchmove", onTouchMove);
     };
-  }, [toggleLetter]);
+  }, [state, toggleLetter]);
 
   return (
     <div className={classes.container}>
@@ -342,12 +344,25 @@ export const Grid = () => {
       >
         {grid}
       </div>
-      {solved ? <div className={classes.solved}>🎉</div> : null}
+      {solved ? <Solved /> : null}
       {error ? (
         <div onClick={() => clearError()} className={classes.message}>
           {error}
         </div>
       ) : null}
+    </div>
+  );
+};
+
+const Solved = () => {
+  const { lang, size } = useParams();
+
+  return (
+    <div className={classes.solved}>
+      <span>🎉</span>
+      <Link replace to={`/${lang}/${size}/${Date.now()}`}>
+        <MdOutlineAutorenew />
+      </Link>
     </div>
   );
 };
