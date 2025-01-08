@@ -1,78 +1,40 @@
-import { useEffect, useReducer } from "react";
-import { Outlet, useParams } from "react-router";
+import { useMemo } from "react";
+import { Outlet } from "react-router";
 import { LanguageContext } from "./context";
-import { reducer, State } from "./state";
-import { Letters } from "../trie";
+import { construct, Letters } from "../trie";
 import { Loader } from "../spa-components/Loader";
+import { useLanguageData } from "../spa-components/DataProvider";
+
+const asLetters = (res: Response) => res.text() as Promise<Letters>;
 
 export const LanguageProvider = () => {
-  const { lang } = useParams();
-  const [{ letters, words, error, trie }, dispatch] = useReducer(reducer, {
-    error: undefined,
-    words: [],
-    letters: "" as Letters,
-    trie: {},
-  } satisfies State);
+  const { data: words, error: wordsError } =
+    useLanguageData<string[]>("words.json");
 
-  const state = error
-    ? "error"
-    : !letters || !words.length
-      ? "loading"
-      : "loaded";
+  const { data: letters, error: letterError } = useLanguageData<Letters>(
+    "letters",
+    { processor: asLetters },
+  );
 
-  useEffect(() => {
-    const abortController = new AbortController();
-    dispatch({ action: "start-loading" });
-    fetch(`https://lister.evanc.no/ordlabyrint/${lang}/words.json`, {
-      signal: abortController.signal,
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Response is not ok");
-        }
-        return res.json();
-      })
-      .then((words: string[]) => {
-        dispatch({ action: "add-words", words });
-      })
-      .catch((ex) => {
-        if (ex instanceof DOMException && ex.name === "AbortError") {
-          return;
-        }
-        console.warn(ex);
-        dispatch({ action: "add-error", error: ex });
-      });
+  const trie = useMemo(() => {
+    if (words) {
+      return construct(words);
+    }
+    return {};
+  }, [words]);
 
-    fetch(`https://lister.evanc.no/ordlabyrint/${lang}/letters`, {
-      signal: abortController.signal,
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Response is not ok");
-        }
-        return res.text() as Promise<Letters>;
-      })
-      .then((letters: Letters) => {
-        dispatch({ action: "add-letters", letters });
-      })
-      .catch((ex) => {
-        if (ex instanceof DOMException && ex.name === "AbortError") {
-          return;
-        }
-        console.warn(ex);
-        dispatch({ action: "add-error", error: ex });
-      });
-
-    return () => {
-      abortController.abort();
-    };
-  }, [lang]);
+  const state =
+    wordsError || letterError
+      ? "error"
+      : !letters || !words?.length
+        ? "loading"
+        : "loaded";
 
   if (state === "loading") {
     return <Loader />;
-  } else if (state === "loaded") {
+  } else if (state === "loaded" && words && letters) {
     return (
-      <LanguageContext.Provider value={{ words, letters, trie }}>
+      <LanguageContext.Provider value={{ words, letters: letters, trie }}>
         <Outlet />
       </LanguageContext.Provider>
     );
