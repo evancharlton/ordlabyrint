@@ -23,10 +23,9 @@ export const LanguageProvider = () => {
   useEffect(() => {
     const abortController = new AbortController();
     dispatch({ action: "start-loading" });
-    fetch(
-      `${import.meta.env.BASE_URL}/${lang}/words.json`.replace(/^\/\//, "/"),
-      { signal: abortController.signal },
-    )
+    fetch(`https://lister.evanc.no/ordlabyrint/${lang}/words.json`, {
+      signal: abortController.signal,
+    })
       .then((res) => {
         if (!res.ok) {
           throw new Error("Response is not ok");
@@ -44,7 +43,7 @@ export const LanguageProvider = () => {
         dispatch({ action: "add-error", error: ex });
       });
 
-    fetch(`${import.meta.env.BASE_URL}/${lang}/letters`.replace(/^\/\//, "/"), {
+    fetch(`https://lister.evanc.no/ordlabyrint/${lang}/letters`, {
       signal: abortController.signal,
     })
       .then((res) => {

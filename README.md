@@ -13,6 +13,3 @@ and ad-free.
 ## Contribution
 
 Please open a pull request or an issue if you have an idea!
-
-Note that this depends on a private repo for the word lists. You will need to
-ignore this while developing, and source a word list from your own data.
