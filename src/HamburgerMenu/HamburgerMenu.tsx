@@ -27,7 +27,7 @@ const useCurrentUrl = () => {
   const { lang, size } = useParams();
   const href = useHref(`/${lang}/${size}/${id}`);
 
-  return [`${window.location.protocol}/`, window.location.host, href].join("/");
+  return `${window.location.protocol}/${window.location.host}/${href}`;
 };
 
 export const HamburgerMenu = () => {
