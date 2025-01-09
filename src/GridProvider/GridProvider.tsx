@@ -2,17 +2,18 @@ import { ReactNode, useMemo } from "react";
 import { CellId, GridContext } from "./context";
 import { useGridSize } from "../GridSizeProvider";
 import { useBoardId } from "../BoardIdProvider";
-import { mulberry32, randomItem } from "../random";
 import { useWords } from "../LanguageProvider";
 import { Letter } from "../trie";
+import { randomItem, useRandom } from "../spa-components/RandomProvider";
 
 const useGridLetters = (): Record<CellId, Letter> => {
   const { width, height } = useGridSize();
   const { id } = useBoardId();
   const { letters: LETTERS } = useWords();
+  const { create } = useRandom();
 
   return useMemo(() => {
-    const random = mulberry32(id);
+    const random = create(id);
 
     const grid: Record<CellId, Letter> = {};
     for (let y = 0; y < height; y += 1) {
@@ -23,7 +24,7 @@ const useGridLetters = (): Record<CellId, Letter> => {
     }
 
     return grid;
-  }, [id, height, width, LETTERS]);
+  }, [create, id, height, width, LETTERS]);
 };
 
 export const GridProvider = ({ children }: { children: ReactNode }) => {

@@ -1,8 +1,8 @@
 import React from "react";
 import { BoardIdContext } from "./context";
 import { useParams } from "react-router";
-import { hash, mulberry32 } from "../random";
 import { useGridSize } from "../GridSizeProvider";
+import { hash, RandomProvider } from "../spa-components/RandomProvider";
 
 const useDateId = () => {
   const { width, height } = useGridSize();
@@ -28,11 +28,8 @@ export const BoardIdProvider = ({ children, id: providedId }: Props) => {
   const fingerprint = `${lang}/${key}/${hashedId}`;
 
   return (
-    <BoardIdContext.Provider
-      key={id}
-      value={{ random: mulberry32(hashedId), id: hashedId, fingerprint }}
-    >
-      {children}
+    <BoardIdContext.Provider key={id} value={{ id: hashedId, fingerprint }}>
+      <RandomProvider seed={hashedId}>{children}</RandomProvider>
     </BoardIdContext.Provider>
   );
 };
