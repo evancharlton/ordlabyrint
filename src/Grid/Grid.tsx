@@ -60,6 +60,7 @@ export const Grid = () => {
     ends,
     error,
     path,
+    reset,
     solved,
     toggleDirection,
     toggleLetter,
@@ -193,6 +194,11 @@ export const Grid = () => {
           backspace();
           break;
         }
+
+        case "Escape": {
+          reset();
+          break;
+        }
       }
     };
 
@@ -200,7 +206,7 @@ export const Grid = () => {
     return () => {
       document.removeEventListener("keydown", onKeyDown);
     };
-  }, [addWord, backspace, toggleDirection]);
+  }, [addWord, backspace, reset, toggleDirection]);
 
   const gridRef = useRef<HTMLDivElement>(null);
 
