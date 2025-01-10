@@ -14,12 +14,11 @@ import { useGamePlay } from "../GameStateProvider";
 import { useSolution } from "../SolutionProvider";
 import { useHref, useNavigate, useParams } from "react-router";
 import { HamburgerMenu as SpaHamburgerMenu } from "../spa-components/HamburgerMenu/HamburgerMenu";
-import { Action, Content } from "../spa-components/HamburgerMenu";
+import { Action, Content, OtherApps } from "../spa-components/HamburgerMenu";
 import { ShareDialog } from "../spa-components/ShareDialog";
 import { useBoardId } from "../BoardIdProvider";
 import { ShareButton } from "../spa-components/ShareButton";
 import { NaobLink } from "../spa-components/NaobLink";
-import { OtherApps } from "../spa-components/HamburgerMenu/OtherApps";
 
 const useCurrentUrl = () => {
   const { id } = useBoardId();
@@ -37,6 +36,7 @@ export const HamburgerMenu = () => {
   const { solve } = useSolution();
   const { lang, size } = useParams();
   const navigate = useNavigate();
+  const { state } = useSolution();
 
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -79,6 +79,7 @@ export const HamburgerMenu = () => {
         <GameHistory />
       </Content>
       <Action
+        disabled={state !== "pending"}
         icon={MdDoneAll}
         text="Vis den beste løsningen"
         onClick={() => {
