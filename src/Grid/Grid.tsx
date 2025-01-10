@@ -196,6 +196,10 @@ export const Grid = () => {
         }
 
         case "Escape": {
+          if (document.querySelector("dialog[open]")) {
+            return;
+          }
+
           reset();
           break;
         }
