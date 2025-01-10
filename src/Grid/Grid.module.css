@@ -33,7 +33,9 @@
   }
 
   .building {
-    border-color: rgba(from var(--path-color) r g b / var(--intensity));
+    border-color: rgba(
+      from var(--path-color) r g b / var(--intensity)
+    ) !important;
   }
 
   .solved {
@@ -58,7 +60,7 @@
   }
 
   .goal {
-    border-color: rgba(from var(--path-color) r g b / 0.5);
+    border-color: var(--background-color);
     border-style: dashed;
   }
 
