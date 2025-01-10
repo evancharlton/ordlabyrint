@@ -7,7 +7,7 @@ import { useGamePlay } from "../GameStateProvider";
 import { useSolution } from "../SolutionProvider";
 import { Direction } from "../GameStateProvider/types";
 import { Link, useParams } from "react-router";
-import { MdOutlineAutorenew } from "react-icons/md";
+import { MdOutlineAutorenew, MdRestartAlt } from "react-icons/md";
 
 const getPercents = (
   words: string[],
@@ -362,13 +362,19 @@ export const Grid = () => {
 
 const Solved = () => {
   const { lang, size } = useParams();
+  const { reset } = useGamePlay();
 
   return (
     <div className={classes.solved}>
       <span>🎉</span>
-      <Link replace to={`/${lang}/${size}/${Date.now()}`}>
-        <MdOutlineAutorenew />
-      </Link>
+      <div className={classes.buttons}>
+        <button onClick={() => reset()}>
+          <MdRestartAlt />
+        </button>
+        <Link replace to={`/${lang}/${size}/${Date.now()}`}>
+          <MdOutlineAutorenew />
+        </Link>
+      </div>
     </div>
   );
 };
