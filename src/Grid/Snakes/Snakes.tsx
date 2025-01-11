@@ -2,14 +2,21 @@ import { useGridSize } from "../../GridSizeProvider";
 import { Solution, useHistory } from "../../HistoryProvider";
 import classes from "./Snakes.module.css";
 
-const MULTIPLIER = 100;
-const LINE_WIDTH = 10;
+const SIZE = 1000;
+const LINE_WIDTH = 15;
 
 const PreviousSolution = ({ path }: Solution) => {
+  const { width, height } = useGridSize();
+  const stepX = SIZE / width;
+  console.log(`TCL ~ PreviousSolution ~ stepX:`, stepX);
+  const stepY = SIZE / height;
+
   const coords = path
     .map((id, i) => {
       const [x, y] = id.split(",").map((v) => +v);
-      return `${i === 0 ? "M" : "L"} ${x * MULTIPLIER + MULTIPLIER / 2 - LINE_WIDTH} ${y * MULTIPLIER + MULTIPLIER / 2 - LINE_WIDTH}`;
+      const posX = stepX / 2 + stepX * x;
+      const posY = stepY / 2 + stepY * y;
+      return `${i === 0 ? "M" : "L"} ${posX} ${posY}`;
     })
     .join("\n");
 
@@ -27,7 +34,6 @@ const PreviousSolution = ({ path }: Solution) => {
 };
 
 export const Snakes = () => {
-  const { width, height } = useGridSize();
   const { previousSolutions } = useHistory();
 
   return (
@@ -38,7 +44,7 @@ export const Snakes = () => {
         width: "100%",
         height: "100%",
       }}
-      viewBox={`0 0 ${width * MULTIPLIER} ${height * MULTIPLIER}`}
+      viewBox={`0 0 ${SIZE} ${SIZE}`}
     >
       {previousSolutions.map((sol) => (
         <PreviousSolution key={sol.path.join("-")} {...sol} />
