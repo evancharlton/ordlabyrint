@@ -6,10 +6,9 @@ const PreviousSolution = ({ path }: Solution) => {
   const coords = path
     .map((id, i) => {
       const [x, y] = id.split(",").map((v) => +v);
-      return `${i === 0 ? "M" : "L"} ${x * 10 + 5} ${y * 10 + 5}`;
+      return `${i === 0 ? "M" : "L"} ${x * 10 + 5 - 1} ${y * 10 + 5 - 1}`;
     })
     .join("\n");
-  console.log(`TCL ~ coords ~ coords:`, coords);
 
   return (
     <>
