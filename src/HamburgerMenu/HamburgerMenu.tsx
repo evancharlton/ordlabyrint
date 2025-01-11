@@ -119,7 +119,22 @@ const GameHistory = () => {
 
 const PreviousSolution = ({ words }: Solution) => {
   const url = useCurrentUrl();
-  const text = `Jeg har krysset labyrinten med ${words.length} ord!\n\n${url}`;
+
+  const emoji = words
+    .map((word) =>
+      word
+        .split("")
+        .map((_) => "🟪")
+        .join(""),
+    )
+    .join(" ⋅ ");
+
+  const text = [
+    `Jeg har krysset labyrinten med ${words.length} ord!`,
+    emoji,
+    url,
+  ].join("\n\n");
+
   return (
     <div className={classes.previousSolution}>
       <ShareButton shareText={text}>{""}</ShareButton>
