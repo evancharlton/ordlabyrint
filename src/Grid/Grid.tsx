@@ -8,6 +8,7 @@ import { useSolution } from "../SolutionProvider";
 import { Direction } from "../GameStateProvider/types";
 import { Link, useParams } from "react-router";
 import { MdOutlineAutorenew, MdRestartAlt } from "react-icons/md";
+import { Snakes } from "./Snakes";
 
 const getPercents = (
   words: string[],
@@ -335,6 +336,7 @@ export const Grid = () => {
 
   return (
     <div className={classes.container}>
+      <Snakes />
       <div
         ref={gridRef}
         className={classes.grid}

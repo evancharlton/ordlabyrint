@@ -1,0 +1,14 @@
+.snakes {
+  grid-area: stack;
+  width: 100%;
+  height: 100%;
+
+  path.snake {
+    stroke: var(--theme-color);
+    opacity: 0.3;
+  }
+
+  path.border {
+    stroke: var(--background-color);
+  }
+}

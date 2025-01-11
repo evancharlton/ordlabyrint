@@ -36,6 +36,8 @@
     border-color: rgba(
       from var(--path-color) r g b / var(--intensity)
     ) !important;
+    backdrop-filter: blur(3px);
+    text-shadow: 0px 0px 4px var(--background-color);
   }
 
   .solved {
@@ -80,7 +82,7 @@
   }
 
   .goal {
-    border-color: var(--background-color);
+    border-color: unset;
     border-style: dashed;
   }
 
