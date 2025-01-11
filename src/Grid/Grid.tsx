@@ -176,6 +176,10 @@ export const Grid = () => {
   ]);
 
   useEffect(() => {
+    if (!current) {
+      return;
+    }
+
     const onKeyDown = (event: KeyboardEvent) => {
       switch (event.key) {
         case "Enter":
@@ -210,7 +214,7 @@ export const Grid = () => {
     return () => {
       document.removeEventListener("keydown", onKeyDown);
     };
-  }, [addWord, backspace, reset, toggleDirection]);
+  }, [addWord, backspace, current, reset, toggleDirection]);
 
   const gridRef = useRef<HTMLDivElement>(null);
 
