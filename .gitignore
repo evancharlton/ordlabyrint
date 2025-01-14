@@ -26,7 +26,6 @@ dist-ssr
 
 # Terraform/Tofu stuff
 .terraform
-.terraform.lock.hcl
 terraform.*.backup
 
 # Word lists
