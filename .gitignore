@@ -24,10 +24,6 @@ dist-ssr
 *.sln
 *.sw?
 
-# Terraform/Tofu stuff
-.terraform
-terraform.*.backup
-
 # Word lists
 public/nb/
 public/nn/
