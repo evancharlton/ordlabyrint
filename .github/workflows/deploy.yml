@@ -17,13 +17,6 @@ jobs:
           persist-credentials: false
           submodules: "true"
 
-      - id: "auth"
-        name: "Authenticate to Google Cloud"
-        uses: "google-github-actions/auth@v2"
-        with:
-          create_credentials_file: true
-          workload_identity_provider: "projects/594849475420/locations/global/workloadIdentityPools/github-pool/providers/github-provider"
-
       - name: "Set environment variables"
         run: |
           echo "VITE_RELEASE=${GITHUB_SHA:0:8}" >> $GITHUB_ENV
