@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 import { Letters, Trie } from "../trie";
 
-export const LanguageContext = createContext<
+export const WordsContext = createContext<
   | {
       words: string[];
       letters: Letters;
@@ -11,9 +11,9 @@ export const LanguageContext = createContext<
 >(undefined);
 
 export const useWords = () => {
-  const context = useContext(LanguageContext);
+  const context = useContext(WordsContext);
   if (!context) {
-    throw new Error("Must be rendered within <LanguageContext.Provider />!");
+    throw new Error("Must be rendered within <WordsContext.Provider />!");
   }
 
   return context;

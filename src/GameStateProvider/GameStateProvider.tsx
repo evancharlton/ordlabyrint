@@ -3,7 +3,7 @@ import { CellId, useGrid } from "../GridProvider";
 import { GameStateContext } from "./context";
 import { reducer, State } from "./state";
 import { useGridSize } from "../GridSizeProvider";
-import { useWords } from "../LanguageProvider";
+import { useWords } from "../WordsProvider";
 import { Letters } from "../trie";
 import { useSolution } from "../SolutionProvider";
 import { useHistory } from "../HistoryProvider";

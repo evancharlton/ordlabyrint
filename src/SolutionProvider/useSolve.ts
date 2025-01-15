@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useWords } from "../LanguageProvider";
+import { useWords } from "../WordsProvider";
 import { useGridSize } from "../GridSizeProvider";
 import { CellId, useGrid } from "../GridProvider";
 import { Trie } from "../trie";

@@ -2,7 +2,7 @@ import { ReactNode, useCallback, useMemo } from "react";
 import { CellId, GridContext } from "./context";
 import { useGridSize } from "../GridSizeProvider";
 import { useBoardId } from "../BoardIdProvider";
-import { useWords } from "../LanguageProvider";
+import { useWords } from "../WordsProvider";
 import { Letter } from "../trie";
 import {
   hash,
