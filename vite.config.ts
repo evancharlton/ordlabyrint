@@ -38,7 +38,7 @@ export default defineConfig({
         runtimeCaching: [
           {
             urlPattern: /(?:\.json|\bletters)$/,
-            handler: "NetworkFirst",
+            handler: "StaleWhileRevalidate",
           },
         ],
       },
