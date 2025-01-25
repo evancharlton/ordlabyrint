@@ -11,7 +11,7 @@ export default defineConfig({
       manifest: {
         name: "Ordlabyrint",
         short_name: "Ordlabyrint",
-        theme_color: "#8804f4",
+        theme_color: "#44027A",
         icons: [
           {
             src: "/logo-64.png",
