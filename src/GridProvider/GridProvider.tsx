@@ -150,7 +150,12 @@ const useGridLetters = (): Record<CellId, Letter> => {
           }
         }
       }
-      break safetyLoop;
+
+      if (spanned) {
+        break safetyLoop;
+      } else {
+        continue safetyLoop;
+      }
     }
 
     path.forEach(({ x, y }, i) => {
