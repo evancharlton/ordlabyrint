@@ -20,7 +20,7 @@ export const useStorageContext = () => {
   return context;
 };
 
-const globalStore = localforage.createInstance({
+export const globalStore = localforage.createInstance({
   driver: localforage.INDEXEDDB,
   name: "ordlabyrint",
   version: 1,

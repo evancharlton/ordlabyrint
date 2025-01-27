@@ -5,8 +5,9 @@ import { CellId, useGrid } from "../GridProvider";
 import { Trie } from "../trie";
 import { SolverState } from "./context";
 import { Solution } from "../HistoryProvider";
+import { useStorageState } from "../StorageContainer";
+import { useParams } from "react-router";
 import { useBoardId } from "../BoardIdProvider";
-import { useStorageState } from "../useStorageState";
 
 export const useSolve = () => {
   const { trie: root } = useWords();
@@ -15,22 +16,20 @@ export const useSolve = () => {
   const [state, setState] = useState<SolverState>("pending");
   const [progress, setProgress] = useState<number>(0);
   const abortController = useRef<AbortController | null>(null);
+  const { lang } = useParams();
+  const { id } = useBoardId();
+  const { key: sizeKey } = useGridSize();
 
-  const { fingerprint } = useBoardId();
-  const [solution, setSolution] = useStorageState<Solution>(
-    `solutions/${fingerprint}`,
-    {
-      words: [],
-      path: [],
-      timestamp: 0,
-    },
+  const [solutions, setSolutions] = useStorageState<Record<string, Solution>>(
+    `${lang}/${sizeKey}/solutions`,
+    {},
   );
 
   useEffect(() => {
-    if (solution.words.length) {
+    if (solutions[id]?.words?.length) {
       setState("solved");
     }
-  }, [solution.words.length]);
+  }, [id, solutions]);
 
   const abort = useCallback(() => {
     abortController.current?.abort();
@@ -158,8 +157,13 @@ export const useSolve = () => {
       ({ words: a }, { words: b }) => a.join("").length - b.join("").length,
     );
 
-    setSolution(best);
-  }, [height, letters, root, setSolution, width]);
+    setSolutions((old) => {
+      return {
+        ...old,
+        [id]: best,
+      };
+    });
+  }, [height, id, letters, root, setSolutions, width]);
 
-  return { abort, solve: solveBfs, state, progress, solution };
+  return { abort, solve: solveBfs, state, progress, solution: solutions[id] };
 };

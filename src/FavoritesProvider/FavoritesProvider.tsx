@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { useParams } from "react-router";
 import { useBoardId } from "../BoardIdProvider";
 import { useGridSize } from "../GridSizeProvider";
-import { useStorageState } from "../useStorageState";
+import { useStorageState } from "../StorageContainer";
 import { FavoritesContext } from "./context";
 import { ButtonsPortal } from "../Page";
 import { MdStar, MdStarOutline } from "react-icons/md";
