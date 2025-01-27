@@ -1,5 +1,4 @@
 import { HashRouter, Route, Routes } from "react-router";
-import "./App.css";
 import WordsProvider from "./WordsProvider";
 import GridSizeProvider from "./GridSizeProvider";
 import Play from "./Play";
