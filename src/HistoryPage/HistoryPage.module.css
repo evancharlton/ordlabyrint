@@ -19,21 +19,23 @@
     grid-template-areas:
       "favorite info"
       "solved   solutions";
-    grid-template-columns: min-content 1fr;
+    grid-template-columns: 20px 1fr;
     grid-template-rows: 1fr 1fr;
 
     gap: 8px;
 
     .favorite {
       grid-area: favorite;
+      justify-self: center;
     }
 
     .info {
       grid-area: info;
     }
 
-    .solve {
+    .solved {
       grid-area: solved;
+      justify-self: center;
     }
 
     .message {
