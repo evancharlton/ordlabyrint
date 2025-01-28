@@ -15,10 +15,9 @@ export const FavoritesProvider = ({
   const { lang } = useParams();
   const { key: sizeKey } = useGridSize();
   const { id } = useBoardId();
-  const key = `favorites/${lang}/${sizeKey}`;
 
   const [favorites, setFavorites] = useStorageState<Record<string, number>>(
-    key,
+    `${lang}/${sizeKey}/favorites`,
     {},
   );
 

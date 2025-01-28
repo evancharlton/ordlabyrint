@@ -10,11 +10,10 @@ export const HistoryProvider = ({ children }: { children: ReactNode }) => {
   const { lang } = useParams();
   const { key: sizeKey } = useGridSize();
   const { id } = useBoardId();
-  const key = `${lang}/${sizeKey}`;
 
   const [previousSolutions, setPreviousSolutions] = useStorageState<
     Record<string, Solution[]>
-  >(key, {});
+  >(`${lang}/${sizeKey}/history`, {});
 
   const add = useCallback(
     (solution: Solution) => {
@@ -30,10 +29,7 @@ export const HistoryProvider = ({ children }: { children: ReactNode }) => {
         }
         return {
           ...value,
-          [id]: {
-            ...(value.id ?? {}),
-            solution,
-          },
+          [id]: [...(value.id ?? []), solution],
         };
       });
     },
