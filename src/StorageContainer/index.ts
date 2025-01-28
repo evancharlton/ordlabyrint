@@ -1,2 +1,2 @@
 export { StorageContainer } from "./StorageContainer";
-export { useStorageState } from "./useStorageState";
+export { useStorageState, useStorageData } from "./useStorageState";

@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useRef } from "react";
 import {
   MdDoneAll,
+  MdHistory,
   MdInfoOutline,
   MdLink,
   MdOutlineAutorenew,
@@ -78,6 +79,14 @@ export const HamburgerMenu = () => {
       <Content className={classes.history}>
         <GameHistory />
       </Content>
+      <Action
+        icon={MdHistory}
+        text="Logg"
+        onClick={() => {
+          navigate(`/${lang}/${size}/logg`);
+          closeDialog("hamburger");
+        }}
+      />
       <Action
         disabled={state !== "pending"}
         icon={MdDoneAll}

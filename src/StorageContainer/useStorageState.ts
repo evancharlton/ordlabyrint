@@ -27,17 +27,14 @@ export const globalStore = localforage.createInstance({
   storeName: "ordlabyrint",
 });
 
-const markDirty = () =>
-  localStorage.setItem(`ordlabyrint/dirty`, new Date().toISOString());
+type DataState = "loading" | "loaded" | "updating";
 
-export const useStorageState = <TValue>(
+const useStorageDataInternal = <TValue>(
   key: string,
   defaultValue: NonNullable<TValue>,
 ) => {
   const [data, setData] = useState<NonNullable<TValue>>(defaultValue);
-  const [state, setState] = useState<"loading" | "loaded" | "updating">(
-    "loading",
-  );
+  const [state, setState] = useState<DataState>("loading");
 
   const load = useCallback(() => {
     setState("loading");
@@ -65,6 +62,29 @@ export const useStorageState = <TValue>(
     };
   }, [load]);
 
+  return { data, state, setData, setState };
+};
+
+export const useStorageData = <TValue>(
+  key: string,
+  defaultValue: NonNullable<TValue>,
+) => {
+  const { data, state } = useStorageDataInternal<TValue>(key, defaultValue);
+  return { data, state };
+};
+
+const markDirty = () =>
+  localStorage.setItem(`ordlabyrint/dirty`, new Date().toISOString());
+
+export const useStorageState = <TValue>(
+  key: string,
+  defaultValue: NonNullable<TValue>,
+) => {
+  const { data, setData, state, setState } = useStorageDataInternal<TValue>(
+    key,
+    defaultValue,
+  );
+
   const defaultValueRef = useRef(defaultValue);
   const update: typeof setData = useCallback(
     (dataOrUpdater) => {
@@ -87,7 +107,7 @@ export const useStorageState = <TValue>(
         markDirty();
       });
     },
-    [data, key],
+    [data, key, setData, setState],
   );
 
   return [data, update, state] as const;

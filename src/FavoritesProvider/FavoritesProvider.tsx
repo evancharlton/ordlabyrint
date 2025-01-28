@@ -7,6 +7,8 @@ import { FavoritesContext } from "./context";
 import { ButtonsPortal } from "../Page";
 import { MdStar, MdStarOutline } from "react-icons/md";
 
+export type FavoritesData = Record<string, number>;
+
 export const FavoritesProvider = ({
   children,
 }: {
@@ -16,7 +18,7 @@ export const FavoritesProvider = ({
   const { key: sizeKey } = useGridSize();
   const { id } = useBoardId();
 
-  const [favorites, setFavorites] = useStorageState<Record<string, number>>(
+  const [favorites, setFavorites] = useStorageState<FavoritesData>(
     `${lang}/${sizeKey}/favorites`,
     {},
   );

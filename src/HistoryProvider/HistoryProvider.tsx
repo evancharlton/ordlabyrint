@@ -6,14 +6,15 @@ import { useParams } from "react-router";
 import { useGridSize } from "../GridSizeProvider";
 import { useBoardId } from "../BoardIdProvider";
 
+export type HistoryData = Record<string, Solution[]>;
+
 export const HistoryProvider = ({ children }: { children: ReactNode }) => {
   const { lang } = useParams();
   const { key: sizeKey } = useGridSize();
   const { id } = useBoardId();
 
-  const [previousSolutions, setPreviousSolutions] = useStorageState<
-    Record<string, Solution[]>
-  >(`${lang}/${sizeKey}/history`, {});
+  const [previousSolutions, setPreviousSolutions] =
+    useStorageState<HistoryData>(`${lang}/${sizeKey}/history`, {});
 
   const add = useCallback(
     (solution: Solution) => {

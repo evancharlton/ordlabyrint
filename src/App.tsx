@@ -6,6 +6,7 @@ import { LanguageProvider } from "./spa-components/LanguageSelector";
 import { SizeChooser } from "./SizeChooser";
 import Page from "./Page";
 import PwaContainer from "./spa-components/PwaContainer";
+import { HistoryPage } from "./HistoryPage";
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
               <Route path="" element={<SizeChooser />} />
               <Route path=":size" element={<GridSizeProvider />}>
                 <Route path="" element={<Play />} />
+                <Route path="logg" element={<HistoryPage />} />
                 <Route path=":id" element={<Play />} />
               </Route>
             </Route>

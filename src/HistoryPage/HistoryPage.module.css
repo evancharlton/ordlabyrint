@@ -1,0 +1,40 @@
+.container {
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+
+  & > .entry:first-child {
+    margin-top: 1em;
+  }
+
+  .entry {
+    border: 1px solid #999a;
+    padding: 1em;
+    border-radius: 0.25em;
+
+    margin: 0.5em;
+
+    display: grid;
+    grid-template-areas:
+      "favorite info"
+      "solved   solutions";
+    gap: 8px;
+
+    .favorite {
+      grid-area: favorite;
+    }
+
+    .info {
+      grid-area: info;
+    }
+
+    .solve {
+      grid-area: solved;
+    }
+
+    .message {
+      grid-area: solutions;
+    }
+  }
+}

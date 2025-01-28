@@ -9,6 +9,8 @@ import { useStorageState } from "../StorageContainer";
 import { useParams } from "react-router";
 import { useBoardId } from "../BoardIdProvider";
 
+export type SolutionData = Record<string, Solution>;
+
 export const useSolve = () => {
   const { trie: root } = useWords();
   const { width, height } = useGridSize();
@@ -20,7 +22,7 @@ export const useSolve = () => {
   const { id } = useBoardId();
   const { key: sizeKey } = useGridSize();
 
-  const [solutions, setSolutions] = useStorageState<Record<string, Solution>>(
+  const [solutions, setSolutions] = useStorageState<SolutionData>(
     `${lang}/${sizeKey}/solutions`,
     {},
   );
