@@ -19,6 +19,9 @@
     grid-template-areas:
       "favorite info"
       "solved   solutions";
+    grid-template-columns: min-content 1fr;
+    grid-template-rows: 1fr 1fr;
+
     gap: 8px;
 
     .favorite {
